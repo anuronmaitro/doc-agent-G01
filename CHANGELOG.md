@@ -68,7 +68,7 @@
 - [x] Step 13 — guardrails.check() + hitl.escalate() — S1
 - [x] Step 14 — 🔴 grading_kit/tasks.jsonl (DECISION D3) — S2
 - [x] Step 15 — grading_kit/success_check.py — S3
-- [ ] Step 16 — eval/judge.py (DECISION D5: hybrid LLM-judge + human spot-check) — S1
+- [x] Step 16 — eval/judge.py (DECISION D5: hybrid LLM-judge + human spot-check) — S1
 - [ ] Step 17 — scripts/run_eval.py + scripts/run.sh — S2
 - [ ] Step 18 — eval/ablation.py — S3
 - [ ] Step 19 — Tests: un-skip everything and close the CI gates — S1
