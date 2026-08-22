@@ -66,11 +66,6 @@ class TestJudged:
         monkeypatch.setattr(judge_mod, "judge", lambda query, answer: 3.5)
         assert success_check.check(self._task(), _answer()) is False
 
-    def test_judge_not_yet_implemented_fails_closed_not_crashes(self):
-        """Real behaviour today (Step 16 hasn't landed): judge() genuinely raises
-        NotImplementedError. A judged task must fail closed, not crash the caller."""
-        assert success_check.check(self._task(), _answer()) is False
-
     def test_judge_raising_any_exception_fails_closed(self, monkeypatch):
         def _boom(query, answer):
             raise RuntimeError("LLM unavailable")
@@ -107,6 +102,59 @@ class TestAbstention:
         # Defensive: only the real boolean False counts, not a falsy stand-in.
         answer = _answer(grounded=0)
         assert success_check.check(self._task(), answer) is False
+
+
+class TestJudgedIntegrationWithTheRealJudge:
+    """Step 16 landed after this file's judged tests above (all mocking judge_module.judge
+    directly). This class proves the real wiring end to end instead: the real judge(), with
+    only the LLM client mocked, called through check()'s own dispatch."""
+
+    def _task(self) -> dict:
+        return {"kind": "judged", "question": "Explain the reflection formula."}
+
+    def test_real_judge_through_check_passes_a_good_answer(self, monkeypatch):
+        from types import SimpleNamespace
+
+        from doc_agent.llm import client as client_mod
+
+        monkeypatch.setattr(judge_mod, "_get_chunk_lookup", lambda: {})
+        monkeypatch.setattr(client_mod.settings, "llm_api_key", "fake-test-key")
+
+        reply = "CORRECTNESS: 2\nCOMPLETENESS: 2\nGROUNDEDNESS: 2\nTOTAL: 6/6\nVERDICT: good.\n"
+
+        class _FakeCompletions:
+            def create(self, **kwargs):
+                return SimpleNamespace(
+                    choices=[SimpleNamespace(message=SimpleNamespace(content=reply))],
+                    usage=SimpleNamespace(total_tokens=10),
+                )
+
+        fake_client = SimpleNamespace(chat=SimpleNamespace(completions=_FakeCompletions()))
+        monkeypatch.setattr(client_mod, "Groq", lambda api_key: fake_client)
+
+        assert success_check.check(self._task(), _answer()) is True
+
+    def test_real_judge_through_check_fails_a_bad_answer(self, monkeypatch):
+        from types import SimpleNamespace
+
+        from doc_agent.llm import client as client_mod
+
+        monkeypatch.setattr(judge_mod, "_get_chunk_lookup", lambda: {})
+        monkeypatch.setattr(client_mod.settings, "llm_api_key", "fake-test-key")
+
+        reply = "CORRECTNESS: 0\nCOMPLETENESS: 1\nGROUNDEDNESS: 0\nTOTAL: 1/6\nVERDICT: weak.\n"
+
+        class _FakeCompletions:
+            def create(self, **kwargs):
+                return SimpleNamespace(
+                    choices=[SimpleNamespace(message=SimpleNamespace(content=reply))],
+                    usage=SimpleNamespace(total_tokens=10),
+                )
+
+        fake_client = SimpleNamespace(chat=SimpleNamespace(completions=_FakeCompletions()))
+        monkeypatch.setattr(client_mod, "Groq", lambda api_key: fake_client)
+
+        assert success_check.check(self._task(), _answer()) is False
 
 
 class TestUnknownKindAndNeverRaises:
