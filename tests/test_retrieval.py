@@ -164,6 +164,67 @@ class TestLoad:
         assert gamma.doc_id == "ch06_gamma"
 
 
+class TestContextExpand:
+    """2026-08-23: neighbour-context enrichment, off by default (existing callers/tests
+    above must see unexpanded text unchanged), on in the real configs/config.yaml."""
+
+    CFG_ON = {**CFG, "retrieve": {"context_expand": True}}
+    CFG_OFF = {**CFG, "retrieve": {"context_expand": False}}
+
+    def test_default_off_does_not_change_existing_behaviour(self, index_dir):
+        chunks, vectors = _corpus()  # CFG (module-level) has no "retrieve" key at all
+        store.build(chunks, vectors, CFG)
+        loaded = store.load(CFG)
+        assert [c.text for c in loaded.chunks] == [c.text for c in chunks]
+
+    def test_explicit_off_does_not_change_text(self, index_dir):
+        chunks, vectors = _corpus()
+        store.build(chunks, vectors, CFG)
+        loaded = store.load(self.CFG_OFF)
+        assert [c.text for c in loaded.chunks] == [c.text for c in chunks]
+
+    def test_same_page_neighbours_get_merged_in(self, index_dir):
+        """_corpus()'s first two chunks (r00, r01) share page as_p0255 -- adjacent in the
+        list, same as real chunking's own reading order."""
+        chunks, vectors = _corpus()
+        store.build(chunks, vectors, CFG)
+        loaded = store.load(self.CFG_ON)
+
+        first = loaded.chunks[0]  # only a same-page successor (no predecessor, i=0)
+        assert first.text == "formula body 0\nformula body 1"
+
+        second = loaded.chunks[1]  # both a same-page predecessor AND successor... but
+        # chunk 2 is on a DIFFERENT page (as_p0360), so only the predecessor merges in.
+        assert second.text == "formula body 0\nformula body 1"
+
+    def test_page_boundary_is_not_crossed(self, index_dir):
+        """Chunk 2 (as_p0360) sits between chunk 1 (as_p0255) and chunk 3 (as_p0243) --
+        both real neighbours in list position, neither a real neighbour on the page."""
+        chunks, vectors = _corpus()
+        store.build(chunks, vectors, CFG)
+        loaded = store.load(self.CFG_ON)
+        assert loaded.chunks[2].text == "formula body 2"  # unchanged -- no same-page neighbour
+
+    def test_does_not_change_chunk_count_or_row_alignment(self, index_dir):
+        """The one contract that must survive expansion untouched: index row i is still
+        chunks[i] -- only .text content changes, never the list shape."""
+        chunks, vectors = _corpus()
+        store.build(chunks, vectors, CFG)
+        loaded = store.load(self.CFG_ON)
+        assert len(loaded.chunks) == len(chunks)
+        assert [c.id for c in loaded.chunks] == [c.id for c in chunks]
+        for i in range(len(chunks)):
+            _scores, ids = loaded.index.search(vectors[i : i + 1], 1)
+            assert ids[0][0] == i  # embeddings still align to the ORIGINAL (unexpanded) text
+
+    def test_single_chunk_page_is_unaffected(self, index_dir):
+        chunks = [Chunk(id="solo|p1", doc_id="d", text="alone", page_ids=["p1"], score=0.0)]
+        vectors = np.stack([_unit(np.random.default_rng(1).normal(size=8))]).astype(np.float32)
+        store.build(chunks, vectors, CFG)
+        loaded = store.load(self.CFG_ON)
+        assert loaded.chunks[0].text == "alone"
+
+
 class TestRebuild:
     def test_rebuild_replaces_rather_than_appends(self, index_dir):
         chunks, vectors = _corpus(4)
@@ -205,7 +266,9 @@ class TestRetrieve:
         chunks, vectors = _corpus(4)
         store.build(chunks, vectors, CFG)
         monkeypatch.setattr(
-            sentence_transformers, "SentenceTransformer", lambda name: _FakeEncoder(vectors[0])
+            sentence_transformers,
+            "SentenceTransformer",
+            lambda name, **kw: _FakeEncoder(vectors[0]),
         )
         cfg = {**CFG, "retrieve": {**RETRIEVE_CFG, "k": 2}}
         r = retriever_mod.Retriever(cfg)
@@ -216,7 +279,9 @@ class TestRetrieve:
         store.build(chunks, vectors, CFG)
         # query vector == chunk 2's own vector -> chunk 2 must win with score ~1.0
         monkeypatch.setattr(
-            sentence_transformers, "SentenceTransformer", lambda name: _FakeEncoder(vectors[2])
+            sentence_transformers,
+            "SentenceTransformer",
+            lambda name, **kw: _FakeEncoder(vectors[2]),
         )
         cfg = {**CFG, "retrieve": RETRIEVE_CFG}
         r = retriever_mod.Retriever(cfg)
@@ -230,7 +295,9 @@ class TestRetrieve:
         chunks, vectors = _corpus(3)
         store.build(chunks, vectors, CFG)
         monkeypatch.setattr(
-            sentence_transformers, "SentenceTransformer", lambda name: _FakeEncoder(vectors[0])
+            sentence_transformers,
+            "SentenceTransformer",
+            lambda name, **kw: _FakeEncoder(vectors[0]),
         )
         cfg = {**CFG, "retrieve": RETRIEVE_CFG}
         r = retriever_mod.Retriever(cfg)
@@ -242,7 +309,7 @@ class TestRetrieve:
         monkeypatch.setattr(
             sentence_transformers,
             "SentenceTransformer",
-            lambda name: _FakeEncoder(np.zeros(8, dtype=np.float32)),
+            lambda name, **kw: _FakeEncoder(np.zeros(8, dtype=np.float32)),
         )
         # An empty text index is unconditionally "weak", so without this the visual
         # fallback would fire for real -- against whatever real image_embed_cache.npz
@@ -259,7 +326,7 @@ class TestRetrieve:
         store.build(chunks, vectors, CFG)
         calls = {"n": 0}
 
-        def _fake_ctor(name):
+        def _fake_ctor(name, **kw):
             calls["n"] += 1
             return _FakeEncoder(vectors[0])
 
@@ -279,7 +346,9 @@ class TestRetrieve:
         chunks, vectors = _corpus(4)
         store.build(chunks, vectors, CFG)
         monkeypatch.setattr(
-            sentence_transformers, "SentenceTransformer", lambda name: _FakeEncoder(vectors[1])
+            sentence_transformers,
+            "SentenceTransformer",
+            lambda name, **kw: _FakeEncoder(vectors[1]),
         )
         cfg = {**CFG, "retrieve": RETRIEVE_CFG}
         r = retriever_mod.Retriever(cfg)
@@ -338,7 +407,7 @@ class TestRerank:
         monkeypatch.setattr(
             sentence_transformers,
             "CrossEncoder",
-            lambda name: _FakeCrossEncoder({"alpha": 0.2, "beta": 0.9}),
+            lambda name, **kw: _FakeCrossEncoder({"alpha": 0.2, "beta": 0.9}),
         )
         result = rerank_mod.rerank("q", self._candidates(), self.RERANK_ON)
         assert [c.id for c in result] == ["b", "a"]
@@ -348,7 +417,7 @@ class TestRerank:
     def test_cross_encoder_loaded_once_and_cached_across_calls(self, monkeypatch):
         calls = {"n": 0}
 
-        def _ctor(name):
+        def _ctor(name, **kw):
             calls["n"] += 1
             return _FakeCrossEncoder({"alpha": 0.5, "beta": 0.5})
 
@@ -434,7 +503,9 @@ class TestVisualFallback:
         change dense-only behaviour at all -- the fallback is additive, never required."""
         chunk = self._build_one_chunk_index(index_dir)
         monkeypatch.setattr(
-            sentence_transformers, "SentenceTransformer", lambda name: _FakeEncoder(ORTHOGONAL)
+            sentence_transformers,
+            "SentenceTransformer",
+            lambda name, **kw: _FakeEncoder(ORTHOGONAL),
         )
         monkeypatch.setattr(retriever_mod, "IMAGE_CACHE_PATH", tmp_path / "missing.npz")
         cfg = {**CFG, "retrieve": VISUAL_RETRIEVE_CFG}
@@ -451,7 +522,7 @@ class TestVisualFallback:
         by making _ensure_clip() raise if it's ever called."""
         self._build_one_chunk_index(index_dir)
         monkeypatch.setattr(
-            sentence_transformers, "SentenceTransformer", lambda name: _FakeEncoder(E0)
+            sentence_transformers, "SentenceTransformer", lambda name, **kw: _FakeEncoder(E0)
         )
 
         def _exploding_ensure_clip(self):
@@ -474,7 +545,9 @@ class TestVisualFallback:
         visual fallback must still make it discoverable and citable by page id."""
         self._build_one_chunk_index(index_dir)  # only covers as_p0200
         monkeypatch.setattr(
-            sentence_transformers, "SentenceTransformer", lambda name: _FakeEncoder(ORTHOGONAL)
+            sentence_transformers,
+            "SentenceTransformer",
+            lambda name, **kw: _FakeEncoder(ORTHOGONAL),
         )
         _patch_fake_clip(monkeypatch, E0)
         cache_path = tmp_path / "cache.npz"
@@ -497,7 +570,9 @@ class TestVisualFallback:
         confirmation, not silently skipped just because it was already present."""
         chunk = self._build_one_chunk_index(index_dir)  # covers as_p0200, dense score 0.0
         monkeypatch.setattr(
-            sentence_transformers, "SentenceTransformer", lambda name: _FakeEncoder(ORTHOGONAL)
+            sentence_transformers,
+            "SentenceTransformer",
+            lambda name, **kw: _FakeEncoder(ORTHOGONAL),
         )
         _patch_fake_clip(monkeypatch, E0)
         cache_path = tmp_path / "cache.npz"

@@ -221,5 +221,55 @@ def load(cfg: dict) -> Any:
         except (OSError, json.JSONDecodeError):
             pass
 
+    if cfg.get("retrieve", {}).get("context_expand", False):
+        chunks = _expand_context(chunks)
+
     logger.info(f"index.store: loaded {index.ntotal} vectors (dim {index.d}) from {INDEX_DIR}/")
     return LoadedIndex(index=index, chunks=chunks, dim=int(index.d), index_type=index_type)
+
+
+def _expand_context(chunks: list[Chunk]) -> list[Chunk]:
+    """Append each chunk's immediate same-page neighbours' text into its own `.text`.
+
+    This corpus chunks fine-grained (as_p0255 alone splits into 16 chunks -- one per
+    numbered formula plus separate prose paragraphs), so a single retrieved chunk often
+    carries almost no surrounding context. A real live query ("Gamma(1/2)") found the
+    correct chunk (formula 6.1.8) sitting right next to a chunk it needed but didn't
+    contain -- retrieved in total isolation, that formula's own OCR'd text
+    (`\\Gamma(1)=...`, a transcription artefact) reads as unrelated to the question asking
+    about `\\Gamma(1/2)`. Neighbour context gives the LLM the surrounding page's own words
+    to recover from exactly that kind of isolated-chunk gap.
+
+    Applied ONCE, here at load time -- not duplicated inside `Retriever.retrieve()` alone --
+    so every consumer that resolves a chunk_id back to its text (`Retriever`,
+    `agent/tools.py`'s citation/extract lookups, `eval/metrics.py`'s groundedness check)
+    sees the IDENTICAL enriched text. Splitting this differently between the retrieval path
+    and the citation-validation path would silently break `citation_accuracy`'s span-bounds
+    check: a span computed against enriched text would then fail bounds-checking against a
+    shorter, un-enriched copy loaded separately elsewhere.
+
+    Adjacency is positional in `chunks` (the same list `index` row i already aligns with),
+    not a separate ordering field -- `LoadedIndex`'s own contract already guarantees chunks
+    from the same page appear in reading order next to each other, since that's how
+    `index/chunk.py` produced them in the first place. Guarded by `page_ids` equality so a
+    chunk at a page boundary never pulls in a neighbouring PAGE's unrelated text.
+
+    Does not change `Chunk`'s shape, the list's length, or FAISS-row alignment -- only
+    `.text` content -- so `index` row i is still `chunks[i]` exactly as `LoadedIndex`
+    requires, and the embeddings already computed against the ORIGINAL (unexpanded) text
+    stay valid; only what the LLM eventually reads at synthesis time changes, not what was
+    embedded for search. (A well-known, legitimate RAG technique -- "sentence-window" /
+    "small-to-big" retrieval: precise small chunks for search ranking, wider context
+    windows for the model that actually has to answer from them.)
+    """
+    expanded: list[Chunk] = []
+    for i, chunk in enumerate(chunks):
+        parts = [chunk.text]
+        if i > 0 and chunks[i - 1].page_ids == chunk.page_ids:
+            parts.insert(0, chunks[i - 1].text)
+        if i + 1 < len(chunks) and chunks[i + 1].page_ids == chunk.page_ids:
+            parts.append(chunks[i + 1].text)
+        expanded.append(
+            chunk.model_copy(update={"text": "\n".join(parts)}) if len(parts) > 1 else chunk
+        )
+    return expanded

@@ -170,7 +170,15 @@ def test_injection_in_document_does_not_hijack(tmp_path, monkeypatch):
 
         cfg = {
             "agent": {"max_steps": 8, "model": "openai/gpt-oss-120b"},
-            "retrieve": {"k": 10, "k_step": 10, "k_max": 40, "weak_threshold": 0.1},
+            # rerank: False -- this test is about injection defence, not reranking; decide()
+            # now calls rerank.rerank() too (2026-08-23), which is a no-op passthrough here.
+            "retrieve": {
+                "k": 10,
+                "k_step": 10,
+                "k_max": 40,
+                "weak_threshold": 0.1,
+                "rerank": False,
+            },
         }
         agent = Agent(cfg=cfg, retriever=_StubRetriever())
 
@@ -290,7 +298,15 @@ def test_trace_covers_every_step(tmp_path, monkeypatch):
 
         cfg = {
             "agent": {"max_steps": 8, "model": "openai/gpt-oss-120b"},
-            "retrieve": {"k": 10, "k_step": 10, "k_max": 40, "weak_threshold": 0.5},
+            # rerank: False -- this test is about trace coverage, not reranking; decide()
+            # now calls rerank.rerank() too (2026-08-23), a no-op passthrough here.
+            "retrieve": {
+                "k": 10,
+                "k_step": 10,
+                "k_max": 40,
+                "weak_threshold": 0.5,
+                "rerank": False,
+            },
         }
         agent = Agent(cfg=cfg, retriever=_StubRetriever())
 

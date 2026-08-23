@@ -10,9 +10,16 @@ ocr:      {model: "facebook/nougat-base", finetune: true, adapter: "lora",
            fallback: "vikp/texify", baseline: "tesseract", render_dpi: 300}
 embed:    {model: "BAAI/bge-m3", dim: 1024}
 index:    {type: "faiss:flat", chunk_tokens: 512, overlap: 0, strategy: "semantic-formula-block"}
-retrieve: {k: 10, k_step: 10, k_max: 40, weak_threshold: 0.35, rerank: true,
-           reranker: "BAAI/bge-reranker-v2-m3",
+retrieve: {k: 10, k_step: 10, k_max: 40, weak_threshold: 0.50, rerank: true,
+           reranker: "BAAI/bge-reranker-v2-m3", context_expand: true,
            visual_model: "openai/clip-vit-base-patch32"}       # A3, DECISION D2 (plan_a3.md §5)
+           # weak_threshold: PROVISIONAL, not fully calibrated -- see plan_a3.md Step 10's
+           # 2026-08-23 follow-up. decide() now reranks before checking is_weak() (it
+           # didn't before), so this compares against bge-reranker-v2-m3's score scale, not
+           # the old dense-cosine one 0.35 was tuned for. Set from exactly ONE real data
+           # point (a wrong top-1 reranked to 0.7739), not a calibrated distribution --
+           # needs real measurement across the full task suite at Step 22, same as the
+           # plan's own pre-existing open item already said before this change even landed.
 agent:    {max_steps: 8, autonomy: "act-then-log", budget_usd: 0.05,
            model: "openai/gpt-oss-120b", provider: "groq"}   # A3, DECISION D1 (plan_a3.md §5)
 rl:       {algo: "ppo", train_policy: false}

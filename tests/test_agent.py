@@ -28,7 +28,17 @@ def _make_agent() -> Agent:
 # decide()'s own cfg -- small k/k_step/k_max so a widening test takes 2-3 calls, not 4
 # (real configs/config.yaml uses k=10/k_step=10/k_max=40; the *shape* of the policy is
 # what's under test here, not the real numbers).
-DECIDE_RETRIEVE_CFG = {"k": 1, "k_step": 1, "k_max": 3, "weak_threshold": 0.5}
+DECIDE_RETRIEVE_CFG = {
+    "k": 1,
+    "k_step": 1,
+    "k_max": 3,
+    "weak_threshold": 0.5,
+    # False -- these tests are about the widen/abstain loop's own logic (real, controlled
+    # dense scores from _StubRetriever), not about reranking, which decide() now also calls
+    # (2026-08-23) before every is_weak() check. rerank.rerank() is itself a no-op
+    # passthrough when this is False, so chunk.score here stays exactly what the stub set.
+    "rerank": False,
+}
 
 
 class _StubRetriever:
@@ -252,6 +262,33 @@ class TestAgentDecide:
         agent.decide(state)
 
         assert all(k <= DECIDE_RETRIEVE_CFG["k_max"] for _, k in stub.calls)
+
+    def test_reranks_before_checking_weak(self, monkeypatch):
+        """2026-08-23 fix: before this, rerank.rerank() was never called anywhere in the
+        live loop -- is_weak() only ever saw raw dense scores. Prove decide() now actually
+        calls it, and that is_weak() judges the RERANKED score, not the dense one the stub
+        set. A stub that reports a dense score of 0.9 (comfortably strong) but whose
+        reranked score comes back 0.1 (weak) must widen -- if decide() were still checking
+        the dense score, it would wrongly stop after one pass."""
+        import doc_agent.agent.agent as agent_mod
+
+        calls: list = []
+
+        def _fake_rerank(query, candidates, cfg):
+            calls.append((query, [c.id for c in candidates]))
+            return [c.model_copy(update={"score": 0.1}) for c in candidates]
+
+        monkeypatch.setattr(agent_mod.rerank, "rerank", _fake_rerank)
+
+        cfg = {**DECIDE_RETRIEVE_CFG, "rerank": True}
+        stub = _StubRetriever([0.9, 0.9, 0.9])  # dense scores alone would never widen
+        agent = Agent(cfg={"agent": {"max_steps": 8}, "retrieve": cfg}, retriever=stub)
+        state = {"query": "q", "obs": []}
+        agent.decide(state)
+
+        assert len(calls) == 3  # once per retrieve attempt, including the widen calls
+        assert state["abstain"] is True  # reranked score (0.1) stayed under weak_threshold
+        assert all(c.score == 0.1 for c in state["chunks"])  # is_weak saw the reranked score
 
 
 class TestAgentSynthesize:
