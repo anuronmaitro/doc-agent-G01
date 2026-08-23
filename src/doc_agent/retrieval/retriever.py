@@ -13,6 +13,38 @@ from ..logging_conf import get_logger
 
 logger = get_logger(__name__)
 
+
+def _pick_device() -> str:
+    """2026-08-23: promoted from a one-off Kaggle notebook script into production code --
+    every local-model loader in this module (and rerank.py's reranker) now uses this,
+    instead of trusting sentence-transformers'/transformers' own default device selection.
+
+    torch.cuda.is_available() only checks a driver is present -- it does NOT check the
+    GPU's compute capability is actually supported by this PyTorch build. Kaggle can assign
+    an older GPU (confirmed in practice at Step 3: a Tesla P100, sm_60) that a newer PyTorch
+    wheel (built for sm_70+) can detect but not actually run a kernel on -- that combination
+    reports "cuda available" and then hard-crashes on the first real op. Try a real,
+    trivial CUDA op and fall back to CPU on failure, rather than trusting availability
+    alone. This matters more now than when it only guarded the one-time CLIP embedding
+    pass: Step 22's GPU note (plan_a3.md, revised 2026-08-23) budgets real GPU time for the
+    reranker specifically, on the assumption the code actually uses whatever GPU Kaggle
+    assigns -- that assumption was previously unverified in the actual pipeline code.
+    """
+    import torch
+
+    if not torch.cuda.is_available():
+        return "cpu"
+    try:
+        probe = torch.zeros(1, device="cuda")
+        _ = probe + 1
+        return "cuda"
+    except RuntimeError as exc:
+        logger.warning(
+            f"retriever: CUDA reports available but a real op failed ({exc}) -- using CPU"
+        )
+        return "cpu"
+
+
 # --- Visual-retrieval fallback (DECISION D2, plan_a3.md §5) --------------------------------
 # Scoped deliberately small: NOT full ColPali (README.md/STRUCTURE.md forbid new top-level
 # modules, so there's no home for a genuine separate late-interaction system). Instead, a
@@ -34,6 +66,7 @@ class _ImageIndex:
         self._model_name = model_name
         self._model: Any = None
         self._processor: Any = None
+        self._device: str = "cpu"
 
     def _ensure_clip(self) -> tuple[Any, Any]:
         if self._model is None:
@@ -45,9 +78,13 @@ class _ImageIndex:
             # vision/layout.py). Re-resolve via HfApi().model_info(...).sha if the model
             # string in config.yaml's retrieve.visual_model ever changes.
             revision = "3d74acf9a28c67741b2f4f2ea7635f0aaf6f0268"
-            self._model = CLIPModel.from_pretrained(self._model_name, revision=revision)
+            self._device = _pick_device()
+            self._model = (
+                CLIPModel.from_pretrained(self._model_name, revision=revision)
+                .to(self._device)
+                .eval()
+            )
             self._processor = CLIPProcessor.from_pretrained(self._model_name, revision=revision)
-            self._model.eval()
         return self._model, self._processor
 
     def search(self, query: str, k: int) -> list[tuple[str, float]]:
@@ -66,6 +103,7 @@ class _ImageIndex:
 
         model, processor = self._ensure_clip()
         inputs = processor(text=[query], return_tensors="pt", padding=True, truncation=True)
+        inputs = {k: v.to(self._device) for k, v in inputs.items()}
         with torch.no_grad():
             # NOT model.get_text_features(**inputs) -- the Kaggle embedding job (Step 3)
             # hit a real version-dependent break where a newer transformers release
@@ -76,7 +114,7 @@ class _ImageIndex:
             # trusting the wrapper's contract across versions.
             text_out = model.text_model(**inputs)
             pooled_output = text_out[1]
-            qvec = model.text_projection(pooled_output)[0].numpy().astype(np.float32)
+            qvec = model.text_projection(pooled_output)[0].cpu().numpy().astype(np.float32)
         norm = np.linalg.norm(qvec)
         if norm > 0:
             qvec = qvec / norm
@@ -121,7 +159,10 @@ class Retriever:
             from sentence_transformers import SentenceTransformer
 
             model_name = self._full_cfg["embed"]["model"]
-            self._encoder = SentenceTransformer(model_name)
+            # Explicit device, not sentence-transformers' own default selection -- same
+            # P100-incompatibility risk _pick_device() exists to catch (Step 3's real
+            # Kaggle finding), now checked here too rather than trusted blindly.
+            self._encoder = SentenceTransformer(model_name, device=_pick_device())
         return self._encoder
 
     def _ensure_image_index(self) -> _ImageIndex | None:

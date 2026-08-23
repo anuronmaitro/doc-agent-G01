@@ -17,7 +17,15 @@ def _get_cross_encoder(model_name: str) -> Any:
     if model_name not in _MODEL_CACHE:
         from sentence_transformers import CrossEncoder
 
-        _MODEL_CACHE[model_name] = CrossEncoder(model_name)
+        # Explicit device, not CrossEncoder's own default selection -- reuses
+        # retriever.py's _pick_device() (Step 3's real P100-incompatibility finding: CUDA
+        # can report available and still crash on the first real op) rather than
+        # duplicating that probe here. This module is directly downstream of retriever.py
+        # already (agent.py imports both), so importing it here isn't a new dependency
+        # direction.
+        from .retriever import _pick_device
+
+        _MODEL_CACHE[model_name] = CrossEncoder(model_name, device=_pick_device())
     return _MODEL_CACHE[model_name]
 
 

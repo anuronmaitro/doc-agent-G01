@@ -9,6 +9,7 @@ from typing import Any
 from .. import hooks
 from ..contracts import *  # noqa
 from ..llm import client, postprocess, prompts
+from ..retrieval import rerank
 from ..retrieval import retriever as retriever_mod
 from . import hitl, tools
 from .memory import Memory
@@ -46,13 +47,30 @@ class Agent:
     def decide(self, state: dict) -> dict:
         """Evidence-gated re-search — the MANDATORY agentic behaviour (A3 gate, fail-closed).
         Read the last observation (top_score, k) and branch on the NUMBER, using retrieval.retriever:
-          1. retrieve at k = cfg.retrieve.k
+          1. retrieve at k = cfg.retrieve.k, then RERANK it (see the 2026-08-23 note below)
           2. if is_weak(chunks, cfg):  k2 = next_k(k, cfg)
-               - k2 is not None -> retrieve AGAIN at the wider k2 (widen the net), then re-check
+               - k2 is not None -> retrieve AGAIN at the wider k2 (widen the net), rerank, re-check
                - k2 is None (hit k_max) and still weak -> ABSTAIN ("insufficient evidence")
           3. else -> synthesize a grounded, cited answer
         Emit obs {"top_score": ..., "k": ...} on each step. A fixed retrieve->answer path is NOT agentic
-        and caps the grade. Rule-based (baseline) or RL policy (Stage 7)."""
+        and caps the grade. Rule-based (baseline) or RL policy (Stage 7).
+
+        2026-08-23 follow-up (plan_a3.md Step 10's own RESULT has the full record): before
+        this, `rerank.rerank()` was never actually called anywhere in the live loop —
+        `is_weak()` only ever saw raw dense-cosine scores, and `chunk.score` never became a
+        cross-encoder score outside the standalone `Rerank` tool (which this rule-based
+        `decide()` never dispatches). Reranking is now called here explicitly, at every
+        retrieve (initial and each widen), so `is_weak()`/`top_score()` compare against the
+        reranked score exactly as Step 22's own already-flagged open item asked for —
+        `weak_threshold` was retuned in `config.yaml` accordingly (0.35 was tuned for cosine,
+        not this scale) but that number is PROVISIONAL, from one real data point, not a
+        calibrated distribution — real calibration is still Step 22's job over the full
+        suite. Real, measured cost of this on CPU: ~187s to rerank 40 candidates for one
+        query (bge-reranker-v2-m3 is a full cross-encoder, not a bi-encoder — O(n) full
+        forward passes, not O(1) per candidate the way dense search is) — Step 22's own GPU
+        note has been updated to reflect this is no longer a safe CPU-optional default the
+        way it was before this change.
+        """
         rcfg = self._full_cfg
         query = state["query"]
 
@@ -60,7 +78,7 @@ class Agent:
             state["obs"].append({"top_score": retriever_mod.top_score(chunks), "k": k})
 
         k = rcfg["retrieve"]["k"]
-        chunks = self.retriever.retrieve(query, k=k)
+        chunks = rerank.rerank(query, self.retriever.retrieve(query, k=k), rcfg)
         while retriever_mod.is_weak(chunks, rcfg):
             _emit(chunks, k)
             k2 = retriever_mod.next_k(k, rcfg)
@@ -73,7 +91,7 @@ class Agent:
                 state["abstain_reason"] = "insufficient evidence"
                 return {"tool": "stop", "args": {}}
             k = k2
-            chunks = self.retriever.retrieve(query, k=k)
+            chunks = rerank.rerank(query, self.retriever.retrieve(query, k=k), rcfg)
         _emit(chunks, k)
         state["chunks"] = chunks
         state["abstain"] = False
