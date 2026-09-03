@@ -225,6 +225,67 @@ class TestContextExpand:
         assert loaded.chunks[0].text == "alone"
 
 
+class TestContextExpandWindow:
+    """2026-08-26: `context_expand_window` widens _expand_context past its original
+    fixed +-1 -- Step 22's real run showed one neighbour wasn't enough for a table
+    lookup spanning several small per-row chunks. A 5-chunk, 3-same-page corpus (default
+    _corpus() only ever gives 2 consecutive same-page chunks, not enough to tell window=1
+    apart from window=2)."""
+
+    @staticmethod
+    def _table_corpus(dim=8, seed=0):
+        """5 chunks: rows 0-2 share page as_p0500 (a table), rows 3-4 are a different page."""
+        rng = np.random.default_rng(seed)
+        pages = ["as_p0500", "as_p0500", "as_p0500", "as_p0600", "as_p0600"]
+        chunks, vecs = [], []
+        for i, page in enumerate(pages):
+            chunks.append(
+                Chunk(
+                    id=f"ch24_tables|{page}|r{i:02d}",
+                    doc_id="ch24_tables",
+                    text=f"row {i}",
+                    page_ids=[page],
+                    score=0.0,
+                )
+            )
+            vecs.append(_unit(rng.normal(size=dim)))
+        return chunks, np.stack(vecs).astype(np.float32)
+
+    def test_window_1_only_pulls_immediate_neighbour(self, index_dir):
+        chunks, vectors = self._table_corpus()
+        store.build(chunks, vectors, CFG)
+        cfg = {**CFG, "retrieve": {"context_expand": True, "context_expand_window": 1}}
+        loaded = store.load(cfg)
+        assert loaded.chunks[1].text == "row 0\nrow 1\nrow 2"
+        assert loaded.chunks[0].text == "row 0\nrow 1"  # no predecessor, only successor
+
+    def test_window_2_pulls_every_same_page_row(self, index_dir):
+        chunks, vectors = self._table_corpus()
+        store.build(chunks, vectors, CFG)
+        cfg = {**CFG, "retrieve": {"context_expand": True, "context_expand_window": 2}}
+        loaded = store.load(cfg)
+        assert loaded.chunks[0].text == "row 0\nrow 1\nrow 2"
+        assert loaded.chunks[1].text == "row 0\nrow 1\nrow 2"
+        assert loaded.chunks[2].text == "row 0\nrow 1\nrow 2"
+
+    def test_window_2_still_stops_at_page_boundary(self, index_dir):
+        chunks, vectors = self._table_corpus()
+        store.build(chunks, vectors, CFG)
+        cfg = {**CFG, "retrieve": {"context_expand": True, "context_expand_window": 2}}
+        loaded = store.load(cfg)
+        assert loaded.chunks[3].text == "row 3\nrow 4"  # never crosses into as_p0500
+
+    def test_missing_window_key_defaults_to_1_unchanged(self, index_dir):
+        """Real configs/config.yaml sets context_expand_window explicitly, but an older
+        or hand-written cfg dict that only sets context_expand must not silently widen."""
+        chunks, vectors = self._table_corpus()
+        store.build(chunks, vectors, CFG)
+        cfg = {**CFG, "retrieve": {"context_expand": True}}  # no window key at all
+        loaded = store.load(cfg)
+        assert loaded.chunks[1].text == "row 0\nrow 1\nrow 2"
+        assert loaded.chunks[0].text == "row 0\nrow 1"
+
+
 class TestRebuild:
     def test_rebuild_replaces_rather_than_appends(self, index_dir):
         chunks, vectors = _corpus(4)

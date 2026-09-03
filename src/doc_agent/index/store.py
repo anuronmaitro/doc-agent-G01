@@ -222,14 +222,16 @@ def load(cfg: dict) -> Any:
             pass
 
     if cfg.get("retrieve", {}).get("context_expand", False):
-        chunks = _expand_context(chunks)
+        window = cfg.get("retrieve", {}).get("context_expand_window", 1)
+        chunks = _expand_context(chunks, window)
 
     logger.info(f"index.store: loaded {index.ntotal} vectors (dim {index.d}) from {INDEX_DIR}/")
     return LoadedIndex(index=index, chunks=chunks, dim=int(index.d), index_type=index_type)
 
 
-def _expand_context(chunks: list[Chunk]) -> list[Chunk]:
-    """Append each chunk's immediate same-page neighbours' text into its own `.text`.
+def _expand_context(chunks: list[Chunk], window: int = 1) -> list[Chunk]:
+    """Append each chunk's same-page neighbours' text (up to `window` chunks each
+    direction) into its own `.text`.
 
     This corpus chunks fine-grained (as_p0255 alone splits into 16 chunks -- one per
     numbered formula plus separate prose paragraphs), so a single retrieved chunk often
@@ -239,6 +241,15 @@ def _expand_context(chunks: list[Chunk]) -> list[Chunk]:
     (`\\Gamma(1)=...`, a transcription artefact) reads as unrelated to the question asking
     about `\\Gamma(1/2)`. Neighbour context gives the LLM the surrounding page's own words
     to recover from exactly that kind of isolated-chunk gap.
+
+    `window` defaults to 1 (this function's original, still-tested behaviour) but Step 22's
+    real eval run showed `window=1` isn't always enough: a table spanning many small
+    per-row chunks (Table 24.1, Table 3.1) left the LLM seeing only the retrieved row's own
+    garbled OCR text with no surrounding rows to corroborate it against, and it correctly
+    refused to guess -- see plan_a3.md's Step 22 RESULT. `configs/config.yaml` sets
+    `context_expand_window: 2` for that reason. Widening trades off against Groq's
+    per-request token cap (`v02`/`v03` in Step 22's own run already hit it at window=1) --
+    don't raise this past what a single free-tier request can hold without re-checking that.
 
     Applied ONCE, here at load time -- not duplicated inside `Retriever.retrieve()` alone --
     so every consumer that resolves a chunk_id back to its text (`Retriever`,
@@ -265,10 +276,14 @@ def _expand_context(chunks: list[Chunk]) -> list[Chunk]:
     expanded: list[Chunk] = []
     for i, chunk in enumerate(chunks):
         parts = [chunk.text]
-        if i > 0 and chunks[i - 1].page_ids == chunk.page_ids:
-            parts.insert(0, chunks[i - 1].text)
-        if i + 1 < len(chunks) and chunks[i + 1].page_ids == chunk.page_ids:
-            parts.append(chunks[i + 1].text)
+        for j in range(i - 1, max(i - window, 0) - 1, -1):
+            if chunks[j].page_ids != chunk.page_ids:
+                break  # same-page chunks are contiguous -- further out won't match either
+            parts.insert(0, chunks[j].text)
+        for j in range(i + 1, min(i + window, len(chunks) - 1) + 1):
+            if chunks[j].page_ids != chunk.page_ids:
+                break
+            parts.append(chunks[j].text)
         expanded.append(
             chunk.model_copy(update={"text": "\n".join(parts)}) if len(parts) > 1 else chunk
         )

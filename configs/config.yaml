@@ -11,8 +11,15 @@ ocr:      {model: "facebook/nougat-base", finetune: true, adapter: "lora",
 embed:    {model: "BAAI/bge-m3", dim: 1024}
 index:    {type: "faiss:flat", chunk_tokens: 512, overlap: 0, strategy: "semantic-formula-block"}
 retrieve: {k: 10, k_step: 10, k_max: 40, weak_threshold: 0.50, rerank: true,
-           reranker: "BAAI/bge-reranker-v2-m3", context_expand: true,
+           reranker: "BAAI/bge-reranker-v2-m3", context_expand: true, context_expand_window: 2,
            visual_model: "openai/clip-vit-base-patch32"}       # A3, DECISION D2 (plan_a3.md §5)
+           # context_expand_window: 1 -> 2 (2026-08-26, S3, Step 22 follow-up). Step 22's real
+           # run showed window=1 wasn't enough for table lookups (t01/t03/t06): the model saw
+           # only the retrieved row's own garbled OCR text, no neighbouring rows to
+           # corroborate against, and correctly abstained rather than guess. See
+           # index/store.py::_expand_context's docstring and plan_a3.md's Step 22 RESULT.
+           # Tradeoff: bigger per-request prompts -- v02/v03 already hit Groq's TPM cap at
+           # window=1, so this needs re-checking against that cap on the next real run.
            # weak_threshold: PROVISIONAL, not fully calibrated -- see plan_a3.md Step 10's
            # 2026-08-23 follow-up. decide() now reranks before checking is_weak() (it
            # didn't before), so this compares against bge-reranker-v2-m3's score scale, not
@@ -22,6 +29,12 @@ retrieve: {k: 10, k_step: 10, k_max: 40, weak_threshold: 0.50, rerank: true,
            # plan's own pre-existing open item already said before this change even landed.
 agent:    {max_steps: 8, autonomy: "act-then-log", budget_usd: 0.05,
            model: "openai/gpt-oss-120b", provider: "groq"}   # A3, DECISION D1 (plan_a3.md §5)
+calibration: {temperature: 1.0}   # A3, Step 21 -- identity (uncalibrated) until eval/
+           # calibration.py::temperature_scale() is fit on real VALIDATION-split confidence/
+           # correctness pairs (Step 22's real eval run) and this value is replaced with the
+           # fitted T. agent.py's synthesize() reads this exact key for the HITL escalation
+           # threshold's "calibrated scale" comparison (guardrails.ESCALATION_CONFIDENCE_
+           # THRESHOLD, tau=0.50) -- do not remove without updating that read site.
 rl:       {algo: "ppo", train_policy: false}
 serve:    {batch: true}
 deploy:   {target: "hf-spaces"}
