@@ -1,0 +1,2704 @@
+{
+  "meta": {
+    "generated_at": "2026-08-26T14:28:10+00:00",
+    "n_available": 49,
+    "n_selected": 49,
+    "n_run_this_session": 49,
+    "wall_clock_s": 2081.8,
+    "json_path": "reports/a3_eval_results.json",
+    "recall_measured": true,
+    "config": {
+      "model": "openai/gpt-oss-120b",
+      "retrieve": {
+        "k": 10,
+        "k_step": 10,
+        "k_max": 40,
+        "weak_threshold": 0.5,
+        "rerank": true,
+        "reranker": "BAAI/bge-reranker-v2-m3",
+        "context_expand": true,
+        "visual_model": "openai/clip-vit-base-patch32"
+      },
+      "seed": 42
+    }
+  },
+  "summary": {
+    "overall": {
+      "n": 43,
+      "success_rate": 0.6047,
+      "groundedness": 0.0233,
+      "citation_accuracy": 0.0233,
+      "recall_at_k": 0.7333,
+      "mean_confidence": 0.0185,
+      "mean_judge_score": 5.5385,
+      "abstain_rate": 0.9767,
+      "re_search_rate": 0.3488,
+      "llm_calls": 49,
+      "llm_tokens": 204052,
+      "wall_clock_s": 1974.0
+    },
+    "explainability": {
+      "rationale_coverage": {
+        "rate": 1.0,
+        "n": 1,
+        "n_covered": 1
+      },
+      "rationale_faithfulness": {
+        "rate": 1.0,
+        "n": 1,
+        "n_faithful": 1
+      }
+    },
+    "calibration": {
+      "ece": 0.586114,
+      "target": 0.05,
+      "n": 43
+    },
+    "by_split": {
+      "train": {
+        "n": 20,
+        "success_rate": 0.65,
+        "groundedness": 0.05,
+        "citation_accuracy": 0.05,
+        "recall_at_k": 0.7333,
+        "mean_confidence": 0.0399,
+        "mean_judge_score": 6.0,
+        "abstain_rate": 0.95,
+        "re_search_rate": 0.35,
+        "llm_calls": 24,
+        "llm_tokens": 101748,
+        "wall_clock_s": 1010.7
+      },
+      "val": {
+        "n": 10,
+        "success_rate": 0.7,
+        "groundedness": 0.0,
+        "citation_accuracy": 0.0,
+        "recall_at_k": 0.7143,
+        "mean_confidence": 0.0,
+        "mean_judge_score": 6.0,
+        "abstain_rate": 1.0,
+        "re_search_rate": 0.3,
+        "llm_calls": 13,
+        "llm_tokens": 55554,
+        "wall_clock_s": 443.8
+      },
+      "test": {
+        "n": 13,
+        "success_rate": 0.4615,
+        "groundedness": 0.0,
+        "citation_accuracy": 0.0,
+        "recall_at_k": 0.75,
+        "mean_confidence": 0.0,
+        "mean_judge_score": 3.0,
+        "abstain_rate": 1.0,
+        "re_search_rate": 0.3846,
+        "llm_calls": 12,
+        "llm_tokens": 46750,
+        "wall_clock_s": 519.5
+      }
+    },
+    "by_kind": {
+      "verifiable": {
+        "n": 17,
+        "success_rate": 0.0588,
+        "groundedness": 0.0588,
+        "citation_accuracy": 0.0588,
+        "recall_at_k": 0.7059,
+        "mean_confidence": 0.0469,
+        "mean_judge_score": null,
+        "abstain_rate": 0.9412,
+        "re_search_rate": 0.0588,
+        "llm_calls": 21,
+        "llm_tokens": 112391,
+        "wall_clock_s": 740.1
+      },
+      "judged": {
+        "n": 13,
+        "success_rate": 0.9231,
+        "groundedness": 0.0,
+        "citation_accuracy": 0.0,
+        "recall_at_k": 0.7692,
+        "mean_confidence": 0.0,
+        "mean_judge_score": 5.5385,
+        "abstain_rate": 1.0,
+        "re_search_rate": 0.0769,
+        "llm_calls": 28,
+        "llm_tokens": 91661,
+        "wall_clock_s": 671.0
+      },
+      "abstention": {
+        "n": 13,
+        "success_rate": 1.0,
+        "groundedness": 0.0,
+        "citation_accuracy": 0.0,
+        "recall_at_k": null,
+        "mean_confidence": 0.0,
+        "mean_judge_score": null,
+        "abstain_rate": 1.0,
+        "re_search_rate": 1.0,
+        "llm_calls": 0,
+        "llm_tokens": 0,
+        "wall_clock_s": 562.9
+      }
+    },
+    "by_split_kind": {
+      "train/verifiable": {
+        "n": 8,
+        "success_rate": 0.125,
+        "groundedness": 0.125,
+        "citation_accuracy": 0.125,
+        "recall_at_k": 0.75,
+        "mean_confidence": 0.0996,
+        "mean_judge_score": null,
+        "abstain_rate": 0.875,
+        "re_search_rate": 0.125,
+        "llm_calls": 10,
+        "llm_tokens": 59567,
+        "wall_clock_s": 467.2
+      },
+      "train/judged": {
+        "n": 7,
+        "success_rate": 1.0,
+        "groundedness": 0.0,
+        "citation_accuracy": 0.0,
+        "recall_at_k": 0.7143,
+        "mean_confidence": 0.0,
+        "mean_judge_score": 6.0,
+        "abstain_rate": 1.0,
+        "re_search_rate": 0.1429,
+        "llm_calls": 14,
+        "llm_tokens": 42181,
+        "wall_clock_s": 320.2
+      },
+      "train/abstention": {
+        "n": 5,
+        "success_rate": 1.0,
+        "groundedness": 0.0,
+        "citation_accuracy": 0.0,
+        "recall_at_k": null,
+        "mean_confidence": 0.0,
+        "mean_judge_score": null,
+        "abstain_rate": 1.0,
+        "re_search_rate": 1.0,
+        "llm_calls": 0,
+        "llm_tokens": 0,
+        "wall_clock_s": 223.3
+      },
+      "val/verifiable": {
+        "n": 3,
+        "success_rate": 0.0,
+        "groundedness": 0.0,
+        "citation_accuracy": 0.0,
+        "recall_at_k": 0.6667,
+        "mean_confidence": 0.0,
+        "mean_judge_score": null,
+        "abstain_rate": 1.0,
+        "re_search_rate": 0.0,
+        "llm_calls": 3,
+        "llm_tokens": 15867,
+        "wall_clock_s": 39.0
+      },
+      "val/judged": {
+        "n": 4,
+        "success_rate": 1.0,
+        "groundedness": 0.0,
+        "citation_accuracy": 0.0,
+        "recall_at_k": 0.75,
+        "mean_confidence": 0.0,
+        "mean_judge_score": 6.0,
+        "abstain_rate": 1.0,
+        "re_search_rate": 0.0,
+        "llm_calls": 10,
+        "llm_tokens": 39687,
+        "wall_clock_s": 290.9
+      },
+      "val/abstention": {
+        "n": 3,
+        "success_rate": 1.0,
+        "groundedness": 0.0,
+        "citation_accuracy": 0.0,
+        "recall_at_k": null,
+        "mean_confidence": 0.0,
+        "mean_judge_score": null,
+        "abstain_rate": 1.0,
+        "re_search_rate": 1.0,
+        "llm_calls": 0,
+        "llm_tokens": 0,
+        "wall_clock_s": 113.9
+      },
+      "test/verifiable": {
+        "n": 6,
+        "success_rate": 0.0,
+        "groundedness": 0.0,
+        "citation_accuracy": 0.0,
+        "recall_at_k": 0.6667,
+        "mean_confidence": 0.0,
+        "mean_judge_score": null,
+        "abstain_rate": 1.0,
+        "re_search_rate": 0.0,
+        "llm_calls": 8,
+        "llm_tokens": 36957,
+        "wall_clock_s": 233.8
+      },
+      "test/judged": {
+        "n": 2,
+        "success_rate": 0.5,
+        "groundedness": 0.0,
+        "citation_accuracy": 0.0,
+        "recall_at_k": 1.0,
+        "mean_confidence": 0.0,
+        "mean_judge_score": 3.0,
+        "abstain_rate": 1.0,
+        "re_search_rate": 0.0,
+        "llm_calls": 4,
+        "llm_tokens": 9793,
+        "wall_clock_s": 60.0
+      },
+      "test/abstention": {
+        "n": 5,
+        "success_rate": 1.0,
+        "groundedness": 0.0,
+        "citation_accuracy": 0.0,
+        "recall_at_k": null,
+        "mean_confidence": 0.0,
+        "mean_judge_score": null,
+        "abstain_rate": 1.0,
+        "re_search_rate": 1.0,
+        "llm_calls": 0,
+        "llm_tokens": 0,
+        "wall_clock_s": 225.7
+      }
+    },
+    "errors": [
+      {
+        "id": "v02",
+        "error": "APIStatusError: Error code: 413 - {'error': {'message': 'Request too large for model `openai/gpt-oss-120b` in organization `org_01k0gpxgzafbdt156fvkx2s4v8` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Requested 11041, please reduce your message size and try again. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}"
+      },
+      {
+        "id": "v03",
+        "error": "APIStatusError: Error code: 413 - {'error': {'message': 'Request too large for model `openai/gpt-oss-120b` in organization `org_01k0gpxgzafbdt156fvkx2s4v8` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Requested 8187, please reduce your message size and try again. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}"
+      },
+      {
+        "id": "te08",
+        "error": "RateLimitError: Error code: 429 - {'error': {'message': 'Rate limit reached for model `openai/gpt-oss-120b` in organization `org_01k0gpxgzafbdt156fvkx2s4v8` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 196455, Requested 4714. Please try again in 8m25.008s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}"
+      },
+      {
+        "id": "te10",
+        "error": "RateLimitError: Error code: 429 - {'error': {'message': 'Rate limit reached for model `openai/gpt-oss-120b` in organization `org_01k0gpxgzafbdt156fvkx2s4v8` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 199943, Requested 7728. Please try again in 55m13.872s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}"
+      },
+      {
+        "id": "te11",
+        "error": "RateLimitError: Error code: 429 - {'error': {'message': 'Rate limit reached for model `openai/gpt-oss-120b` in organization `org_01k0gpxgzafbdt156fvkx2s4v8` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 199906, Requested 7657. Please try again in 54m27.216s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}"
+      },
+      {
+        "id": "te12",
+        "error": "RateLimitError: Error code: 429 - {'error': {'message': 'Rate limit reached for model `openai/gpt-oss-120b` in organization `org_01k0gpxgzafbdt156fvkx2s4v8` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 199869, Requested 5192. Please try again in 36m26.352s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}"
+      }
+    ],
+    "agentic_gate": {
+      "n_labels_checked": 43,
+      "n_mislabelled": 0,
+      "mislabelled_ids": [],
+      "n_declared_triggers": 15,
+      "n_measured_triggers": 15,
+      "branches": {
+        "single_pass": 28,
+        "abstain": 15
+      }
+    }
+  },
+  "results": [
+    {
+      "id": "t01",
+      "question": "What is the value of sqrt(2) to 10 decimal places, per Table 1.1?",
+      "split": "train",
+      "kind": "verifiable",
+      "gold": "1.41421\\,35624",
+      "gold_pages": [
+        "as_p0002"
+      ],
+      "declared_needs_research": false,
+      "started_at": "2026-08-26T13:53:28+00:00",
+      "answer_text": "INSUFFICIENT EVIDENCE",
+      "grounded": false,
+      "confidence": 0.0,
+      "n_citations": 0,
+      "success": false,
+      "judge_score": null,
+      "groundedness": 0.0,
+      "citation_accuracy": 0.0,
+      "llm_calls": 1,
+      "llm_tokens": 7819,
+      "raw_llm_outputs": [
+        "ANSWER: INSUFFICIENT EVIDENCE\nCITATIONS: NONE\nRATIONALE: The provided evidence contains no table or data giving \u221a2 to ten decimal places, so the answer cannot be derived."
+      ],
+      "interpret": {
+        "answered": false,
+        "has_rationale": false,
+        "rationale": "",
+        "primary_chunk_id": null,
+        "checkable": false,
+        "faithful": null,
+        "runner_up_chunk_id": null,
+        "score_gap": null,
+        "reason": "abstained/ungrounded -- no cited reference to explain"
+      },
+      "n_retrieve_steps": 1,
+      "k_sequence": [
+        10
+      ],
+      "top_scores": [
+        0.5488
+      ],
+      "final_k": 10,
+      "re_searched": false,
+      "trace_abstained": true,
+      "n_trace_steps": 2,
+      "measured_needs_research": false,
+      "needs_research_label_ok": true,
+      "recall_at_k": 0.0,
+      "recall_k": 10,
+      "elapsed_s": 89.03
+    },
+    {
+      "id": "t02",
+      "question": "What is the adjusted value of the velocity of light c, in units of 10^8 m/sec, per Table 2.3?",
+      "split": "train",
+      "kind": "verifiable",
+      "gold": "2.997925",
+      "gold_pages": [
+        "as_p0007"
+      ],
+      "declared_needs_research": false,
+      "started_at": "2026-08-26T13:54:57+00:00",
+      "answer_text": "2.997925\n\nRationale: This chunk has the highest relevance score and directly lists the adjusted speed of light value from Table\u202f2.3.",
+      "grounded": true,
+      "confidence": 0.7971,
+      "n_citations": 1,
+      "success": true,
+      "judge_score": null,
+      "groundedness": 1.0,
+      "citation_accuracy": 1.0,
+      "llm_calls": 1,
+      "llm_tokens": 7660,
+      "raw_llm_outputs": [
+        "ANSWER: 2.997925\nCITATIONS: ch02_phys_constants|as_p0007|r00\nRATIONALE: This chunk has the highest relevance score and directly lists the adjusted speed of light value from Table\u202f2.3."
+      ],
+      "interpret": {
+        "answered": true,
+        "has_rationale": true,
+        "rationale": "This chunk has the highest relevance score and directly lists the adjusted speed of light value from Table\u202f2.3.",
+        "primary_chunk_id": "ch02_phys_constants|as_p0007|r00",
+        "checkable": true,
+        "faithful": true,
+        "runner_up_chunk_id": "ch09_bessel|as_p0428|r01",
+        "score_gap": 0.7377251088619232,
+        "reason": "cited chunk is the trace's real top scorer, gap=0.7377 > 0"
+      },
+      "n_retrieve_steps": 1,
+      "k_sequence": [
+        10
+      ],
+      "top_scores": [
+        0.9159
+      ],
+      "final_k": 10,
+      "re_searched": false,
+      "trace_abstained": false,
+      "n_trace_steps": 2,
+      "measured_needs_research": false,
+      "needs_research_label_ok": true,
+      "recall_at_k": 1.0,
+      "recall_k": 10,
+      "elapsed_s": 47.88
+    },
+    {
+      "id": "t03",
+      "question": "What is n^3 for n=8 according to Table 3.1 (Powers and Roots)?",
+      "split": "train",
+      "kind": "verifiable",
+      "gold": "512",
+      "gold_pages": [
+        "as_p0024"
+      ],
+      "declared_needs_research": false,
+      "started_at": "2026-08-26T13:55:45+00:00",
+      "answer_text": "INSUFFICIENT EVIDENCE",
+      "grounded": false,
+      "confidence": 0.0,
+      "n_citations": 0,
+      "success": false,
+      "judge_score": null,
+      "groundedness": 0.0,
+      "citation_accuracy": 0.0,
+      "llm_calls": 1,
+      "llm_tokens": 5881,
+      "raw_llm_outputs": [
+        "ANSWER: INSUFFICIENT EVIDENCE\nCITATIONS: NONE\nRATIONALE: The provided excerpts do not contain a specific entry for n\u202f=\u202f8 in Table\u202f3.1, so the value of n\u00b3 cannot be determined from the evidence."
+      ],
+      "interpret": {
+        "answered": false,
+        "has_rationale": false,
+        "rationale": "",
+        "primary_chunk_id": null,
+        "checkable": false,
+        "faithful": null,
+        "runner_up_chunk_id": null,
+        "score_gap": null,
+        "reason": "abstained/ungrounded -- no cited reference to explain"
+      },
+      "n_retrieve_steps": 1,
+      "k_sequence": [
+        10
+      ],
+      "top_scores": [
+        0.864
+      ],
+      "final_k": 10,
+      "re_searched": false,
+      "trace_abstained": true,
+      "n_trace_steps": 2,
+      "measured_needs_research": false,
+      "needs_research_label_ok": true,
+      "recall_at_k": 0.0,
+      "recall_k": 10,
+      "elapsed_s": 43.56
+    },
+    {
+      "id": "t04",
+      "question": "What is the power series expansion of arctan(x) for |x|<=1, per formula 4.3.70?",
+      "split": "train",
+      "kind": "verifiable",
+      "gold": "\\arctan x=x-\\tfrac13x^3+\\tfrac15x^5-\\tfrac17x^7+\\cdots",
+      "gold_pages": [
+        "as_p0075"
+      ],
+      "declared_needs_research": true,
+      "started_at": "2026-08-26T13:56:29+00:00",
+      "answer_text": "INSUFFICIENT EVIDENCE",
+      "grounded": false,
+      "confidence": 0.0,
+      "n_citations": 0,
+      "success": false,
+      "judge_score": null,
+      "groundedness": 0.0,
+      "citation_accuracy": 0.0,
+      "llm_calls": 1,
+      "llm_tokens": 7491,
+      "raw_llm_outputs": [
+        "ANSWER: INSUFFICIENT EVIDENCE\nCITATIONS: NONE\nRATIONALE: The provided evidence does not contain a power series formula for arctan(x); the only related entries are for tan, cot, and logarithmic forms, not the arctan series."
+      ],
+      "interpret": {
+        "answered": false,
+        "has_rationale": false,
+        "rationale": "",
+        "primary_chunk_id": null,
+        "checkable": false,
+        "faithful": null,
+        "runner_up_chunk_id": null,
+        "score_gap": null,
+        "reason": "abstained/ungrounded -- no cited reference to explain"
+      },
+      "n_retrieve_steps": 2,
+      "k_sequence": [
+        10,
+        20
+      ],
+      "top_scores": [
+        0.1397,
+        0.7862
+      ],
+      "final_k": 20,
+      "re_searched": true,
+      "trace_abstained": true,
+      "n_trace_steps": 3,
+      "measured_needs_research": true,
+      "needs_research_label_ok": true,
+      "recall_at_k": 1.0,
+      "recall_k": 20,
+      "elapsed_s": 59.12
+    },
+    {
+      "id": "t05",
+      "question": "According to formula 22.5.7, how is the Chebyshev polynomial T_n(x) expressed in terms of U_{n-1}(x) and U_{n-2}(x)?",
+      "split": "train",
+      "kind": "verifiable",
+      "gold": "T_n(x)=xU_{n-1}(x)-U_{n-2}(x)",
+      "gold_pages": [
+        "as_p0778"
+      ],
+      "declared_needs_research": false,
+      "started_at": "2026-08-26T13:57:28+00:00",
+      "answer_text": "INSUFFICIENT EVIDENCE",
+      "grounded": false,
+      "confidence": 0.0,
+      "n_citations": 0,
+      "success": false,
+      "judge_score": null,
+      "groundedness": 0.0,
+      "citation_accuracy": 0.0,
+      "llm_calls": 1,
+      "llm_tokens": 3277,
+      "raw_llm_outputs": [
+        "ANSWER: INSUFFICIENT EVIDENCE\nCITATIONS: NONE\nRATIONALE: The provided evidence for formula 22.5.7 only defines \u0393\u2099(x) in terms of U_{n-1}(x) and U_{n-2}(x), with no mention of T\u2099(x)."
+      ],
+      "interpret": {
+        "answered": false,
+        "has_rationale": false,
+        "rationale": "",
+        "primary_chunk_id": null,
+        "checkable": false,
+        "faithful": null,
+        "runner_up_chunk_id": null,
+        "score_gap": null,
+        "reason": "abstained/ungrounded -- no cited reference to explain"
+      },
+      "n_retrieve_steps": 1,
+      "k_sequence": [
+        10
+      ],
+      "top_scores": [
+        0.8478
+      ],
+      "final_k": 10,
+      "re_searched": false,
+      "trace_abstained": true,
+      "n_trace_steps": 2,
+      "measured_needs_research": false,
+      "needs_research_label_ok": true,
+      "recall_at_k": 1.0,
+      "recall_k": 10,
+      "elapsed_s": 23.73
+    },
+    {
+      "id": "t06",
+      "question": "What is the binomial coefficient C(10,3) according to Table 24.1?",
+      "split": "train",
+      "kind": "verifiable",
+      "gold": "120",
+      "gold_pages": [
+        "as_p0828"
+      ],
+      "declared_needs_research": false,
+      "started_at": "2026-08-26T13:57:52+00:00",
+      "answer_text": "INSUFFICIENT EVIDENCE",
+      "grounded": false,
+      "confidence": 0.0,
+      "n_citations": 0,
+      "success": false,
+      "judge_score": null,
+      "groundedness": 0.0,
+      "citation_accuracy": 0.0,
+      "llm_calls": 1,
+      "llm_tokens": 8022,
+      "raw_llm_outputs": [
+        "ANSWER: INSUFFICIENT EVIDENCE\nCITATIONS: NONE\nRATIONALE: The provided Table\u202f24.1 excerpts are garbled and do not contain a clear, readable entry for the binomial coefficient\u202fC(10,3)."
+      ],
+      "interpret": {
+        "answered": false,
+        "has_rationale": false,
+        "rationale": "",
+        "primary_chunk_id": null,
+        "checkable": false,
+        "faithful": null,
+        "runner_up_chunk_id": null,
+        "score_gap": null,
+        "reason": "abstained/ungrounded -- no cited reference to explain"
+      },
+      "n_retrieve_steps": 1,
+      "k_sequence": [
+        10
+      ],
+      "top_scores": [
+        0.6473
+      ],
+      "final_k": 10,
+      "re_searched": false,
+      "trace_abstained": true,
+      "n_trace_steps": 2,
+      "measured_needs_research": false,
+      "needs_research_label_ok": true,
+      "recall_at_k": 1.0,
+      "recall_k": 10,
+      "elapsed_s": 58.99
+    },
+    {
+      "id": "t07",
+      "question": "In the worked example converting X=(2531) base 8 to the decimal scale, what is the resulting decimal value?",
+      "split": "train",
+      "kind": "verifiable",
+      "gold": "1369",
+      "gold_pages": [
+        "as_p1014"
+      ],
+      "declared_needs_research": false,
+      "started_at": "2026-08-26T13:58:51+00:00",
+      "answer_text": "INSUFFICIENT EVIDENCE",
+      "grounded": false,
+      "confidence": 0.0,
+      "n_citations": 0,
+      "success": false,
+      "judge_score": null,
+      "groundedness": 0.0,
+      "citation_accuracy": 0.0,
+      "llm_calls": 2,
+      "llm_tokens": 14984,
+      "raw_llm_outputs": [
+        "ANSWER: 1369\nCITATIONS: ch28_scales_notation|as_p1014|r00\nRATIONALE: This chunk explicitly shows the conversion of X=(2531)\u2088 to decimal, yielding X=(1369)\u2081\u2080, and has the highest relevance score.",
+        "ANSWER: 1369\nCITATIONS: ch28_scales_notation|as_p1014|r00\nRATIONALE: This chunk explicitly details the conversion of\u202fX=(2531)\u2088\u202fto decimal and states the result\u202fX=(1369)\u2081\u2080, and it has the highest relevance score among the retrieved evidence."
+      ],
+      "interpret": {
+        "answered": false,
+        "has_rationale": false,
+        "rationale": "",
+        "primary_chunk_id": null,
+        "checkable": false,
+        "faithful": null,
+        "runner_up_chunk_id": null,
+        "score_gap": null,
+        "reason": "abstained/ungrounded -- no cited reference to explain"
+      },
+      "n_retrieve_steps": 1,
+      "k_sequence": [
+        10
+      ],
+      "top_scores": [
+        0.9733
+      ],
+      "final_k": 10,
+      "re_searched": false,
+      "trace_abstained": true,
+      "n_trace_steps": 2,
+      "measured_needs_research": false,
+      "needs_research_label_ok": true,
+      "recall_at_k": 1.0,
+      "recall_k": 10,
+      "elapsed_s": 113.18
+    },
+    {
+      "id": "t08",
+      "question": "According to formula 29.3.24, what is the inverse Laplace transform of (s^2-a^2)/(s^2+a^2)^2?",
+      "split": "train",
+      "kind": "verifiable",
+      "gold": "t\\cos at",
+      "gold_pages": [
+        "as_p1023"
+      ],
+      "declared_needs_research": false,
+      "started_at": "2026-08-26T14:00:44+00:00",
+      "answer_text": "INSUFFICIENT EVIDENCE",
+      "grounded": false,
+      "confidence": 0.0,
+      "n_citations": 0,
+      "success": false,
+      "judge_score": null,
+      "groundedness": 0.0,
+      "citation_accuracy": 0.0,
+      "llm_calls": 2,
+      "llm_tokens": 4433,
+      "raw_llm_outputs": [
+        "ANSWER: t\u202fcos\u202f(at)\nCITATIONS: ch29_laplace|as_p1023|r00|29.3.24\nRATIONALE: This chunk has the highest score and explicitly provides formula\u202f29.3.24, directly giving the inverse transform, whereas the runner\u2011up (29.3.23) lists a different expression.",
+        "ANSWER: t\u202fcos(at)  \nCITATIONS: ch29_laplace|as_p1023|r00|29.3.24  \nRATIONALE: This highest\u2011scoring chunk directly lists formula\u202f29.3.24, giving the inverse transform of (s\u00b2\u2212a\u00b2)/(s\u00b2+a\u00b2)\u00b2 as t\u202fcos(at)."
+      ],
+      "interpret": {
+        "answered": false,
+        "has_rationale": false,
+        "rationale": "",
+        "primary_chunk_id": null,
+        "checkable": false,
+        "faithful": null,
+        "runner_up_chunk_id": null,
+        "score_gap": null,
+        "reason": "abstained/ungrounded -- no cited reference to explain"
+      },
+      "n_retrieve_steps": 1,
+      "k_sequence": [
+        10
+      ],
+      "top_scores": [
+        0.7353
+      ],
+      "final_k": 10,
+      "re_searched": false,
+      "trace_abstained": true,
+      "n_trace_steps": 2,
+      "measured_needs_research": false,
+      "needs_research_label_ok": true,
+      "recall_at_k": 1.0,
+      "recall_k": 10,
+      "elapsed_s": 31.76
+    },
+    {
+      "id": "t09",
+      "question": "Explain the asymptotic behavior described by formula 11.1.14 for x^(1/2) e^(-x) times the integral of I_0(t) from 0 to x, as x becomes large.",
+      "split": "train",
+      "kind": "judged",
+      "gold": null,
+      "gold_pages": [
+        "as_p0481"
+      ],
+      "declared_needs_research": true,
+      "started_at": "2026-08-26T14:01:16+00:00",
+      "answer_text": "INSUFFICIENT EVIDENCE",
+      "grounded": false,
+      "confidence": 0.0,
+      "n_citations": 0,
+      "success": true,
+      "judge_score": 6.0,
+      "groundedness": 0.0,
+      "citation_accuracy": 0.0,
+      "llm_calls": 1,
+      "llm_tokens": 844,
+      "raw_llm_outputs": [
+        "CORRECTNESS: 2\nCOMPLETENESS: 2\nGROUNDEDNESS: 2\nTOTAL: 6/6\nVERDICT: The answer correctly notes lack of evidence, fully addressing and grounding the response per the rubric."
+      ],
+      "interpret": {
+        "answered": false,
+        "has_rationale": false,
+        "rationale": "",
+        "primary_chunk_id": null,
+        "checkable": false,
+        "faithful": null,
+        "runner_up_chunk_id": null,
+        "score_gap": null,
+        "reason": "abstained/ungrounded -- no cited reference to explain"
+      },
+      "n_retrieve_steps": 4,
+      "k_sequence": [
+        10,
+        20,
+        30,
+        40
+      ],
+      "top_scores": [
+        0.3545,
+        0.3545,
+        0.3545,
+        0.3545
+      ],
+      "final_k": 40,
+      "re_searched": true,
+      "trace_abstained": true,
+      "n_trace_steps": 5,
+      "measured_needs_research": true,
+      "needs_research_label_ok": true,
+      "recall_at_k": 1.0,
+      "recall_k": 40,
+      "elapsed_s": 42.31
+    },
+    {
+      "id": "t10",
+      "question": "Explain the asymptotic expansion of H_nu(z) - Y_nu(z) for large |z| given in formula 12.1.34, including what the leading term depends on.",
+      "split": "train",
+      "kind": "judged",
+      "gold": null,
+      "gold_pages": [
+        "as_p0498"
+      ],
+      "declared_needs_research": false,
+      "started_at": "2026-08-26T14:01:58+00:00",
+      "answer_text": "INSUFFICIENT EVIDENCE",
+      "grounded": false,
+      "confidence": 0.0,
+      "n_citations": 0,
+      "success": true,
+      "judge_score": 6.0,
+      "groundedness": 0.0,
+      "citation_accuracy": 0.0,
+      "llm_calls": 2,
+      "llm_tokens": 5568,
+      "raw_llm_outputs": [
+        "ANSWER: INSUFFICIENT EVIDENCE\nCITATIONS: NONE\nRATIONALE: The provided excerpts contain no reference to formula\u202f12.1.34 or to the asymptotic expansion of\u202fH\u2099\u1d64(z)\u202f\u2212\u202fY\u2099\u1d64(z), so the question cannot be answered from the given material.",
+        "CORRECTNESS: 2\nCOMPLETENESS: 2\nGROUNDEDNESS: 2\nTOTAL: 6/6\nVERDICT: The answer correctly notes the lack of evidence, which is appropriate given the empty evidence, earning full marks."
+      ],
+      "interpret": {
+        "answered": false,
+        "has_rationale": false,
+        "rationale": "",
+        "primary_chunk_id": null,
+        "checkable": false,
+        "faithful": null,
+        "runner_up_chunk_id": null,
+        "score_gap": null,
+        "reason": "abstained/ungrounded -- no cited reference to explain"
+      },
+      "n_retrieve_steps": 1,
+      "k_sequence": [
+        10
+      ],
+      "top_scores": [
+        0.8586
+      ],
+      "final_k": 10,
+      "re_searched": false,
+      "trace_abstained": true,
+      "n_trace_steps": 2,
+      "measured_needs_research": false,
+      "needs_research_label_ok": true,
+      "recall_at_k": 1.0,
+      "recall_k": 10,
+      "elapsed_s": 13.55
+    },
+    {
+      "id": "t11",
+      "question": "Describe the asymptotic expansion of f+ig given in formula 14.5.9 for Coulomb wave functions, and what role rho and eta play.",
+      "split": "train",
+      "kind": "judged",
+      "gold": null,
+      "gold_pages": [
+        "as_p0541"
+      ],
+      "declared_needs_research": false,
+      "started_at": "2026-08-26T14:02:12+00:00",
+      "answer_text": "INSUFFICIENT EVIDENCE",
+      "grounded": false,
+      "confidence": 0.0,
+      "n_citations": 0,
+      "success": true,
+      "judge_score": 6.0,
+      "groundedness": 0.0,
+      "citation_accuracy": 0.0,
+      "llm_calls": 3,
+      "llm_tokens": 8884,
+      "raw_llm_outputs": [
+        "ANSWER: The formula 14.5.9 gives the large\u2011\u03c1 asymptotic series for the combination\u202ff\u202f+\u202fi\u202fg (the regular and irregular Coulomb wave functions) as a power series in inverse powers of\u202f2\u202fi\u202f\u03c1.  It starts with the leading term\u202f1 and then adds successive corrections:\n\\[\nf+i g\\;\\sim\\;1\n+\\frac{(i\\eta-L)(i\\eta+L+1)}{1!\\,(2i\\rho)}\n+\\frac{(i\\eta-L)(i\\eta-L+1)(i\\eta+L+1)(i\\eta+L+2)}{2!\\,(2i\\rho)^{2}}\n+\\frac{(i\\eta-L)(i\\eta-L+1)(i\\eta-L+2)(i\\eta+L+1)(i\\eta+L+2)(i\\eta+L+3)}{3!\\,(2i\\rho)^{3}}\n+\\;\\cdots .\n\\]\nThus \u03c1 appears only in the denominator, so the expansion is valid for large\u202f\u03c1 (the asymptotic region), while \u03b7 enters the numerators through the factors\u202f(i\u202f\u03b7\u202f\u2212\u202fL) and\u202f(i\u202f\u03b7\u202f+\u202fL\u202f+\u202f1), determining the size of each correction term. \n\nCITATIONS: ch14_coulomb|as_p0541|r00|p00\n\nRATIONALE: This chunk directly contains the explicit asymptotic series (formula\u202f14.5.9), whereas the other retrieved chunks do not provide that specific expansion.",
+        "ANSWER: The formula 14.5.9 gives the asymptotic expansion of the combination \\(f+ig\\) as a power series in inverse powers of \\(2i\\rho\\):\n\\[\nf+ig\\;\\sim\\;1\n+\\frac{(i\\eta-L)(i\\eta+L+1)}{1!\\,(2i\\rho)}\n+\\frac{(i\\eta-L)(i\\eta-L+1)(i\\eta+L+1)(i\\eta+L+2)}{2!\\,(2i\\rho)^{2}}\n+\\frac{(i\\eta-L)(i\\eta-L+1)(i\\eta-L+2)(i\\eta+L+1)(i\\eta+L+2)(i\\eta+L+3)}{3!\\,(2i\\rho)^{3}}\n+\\;\\cdots .\n\\]\nIn this expansion the parameter \\(\\rho\\) appears only in the denominator as powers of \\(2i\\rho\\); thus large \\(\\rho\\) makes the successive terms small, giving the asymptotic character. The parameter \\(\\eta\\) enters through the factors \\((i\\eta\\pm L+\\dots)\\) in the numerators, so the strength of each term is governed by the value of \\(\\eta\\). \n\nCITATIONS: ch14_coulomb|as_p0541|r00|p00\nRATIONALE: This chunk directly contains the explicit series for \\(f+ig\\) and mentions \\(\\rho\\) and \\(\\eta\\); other chunks do not provide this specific expansion.",
+        "CORRECTNESS: 2\nCOMPLETENESS: 2\nGROUNDEDNESS: 2\nTOTAL: 6/6\nVERDICT: All criteria receive full marks because the answer correctly notes the lack of evidence, which is fully justified and complete."
+      ],
+      "interpret": {
+        "answered": false,
+        "has_rationale": false,
+        "rationale": "",
+        "primary_chunk_id": null,
+        "checkable": false,
+        "faithful": null,
+        "runner_up_chunk_id": null,
+        "score_gap": null,
+        "reason": "abstained/ungrounded -- no cited reference to explain"
+      },
+      "n_retrieve_steps": 1,
+      "k_sequence": [
+        10
+      ],
+      "top_scores": [
+        0.9545
+      ],
+      "final_k": 10,
+      "re_searched": false,
+      "trace_abstained": true,
+      "n_trace_steps": 2,
+      "measured_needs_research": false,
+      "needs_research_label_ok": true,
+      "recall_at_k": 1.0,
+      "recall_k": 10,
+      "elapsed_s": 62.33
+    },
+    {
+      "id": "t12",
+      "question": "Explain what happens to the Weierstrass functions wp, wp', zeta, and sigma at the half-periods, per section 18.3.",
+      "split": "train",
+      "kind": "judged",
+      "gold": null,
+      "gold_pages": [
+        "as_p0633"
+      ],
+      "declared_needs_research": false,
+      "started_at": "2026-08-26T14:03:14+00:00",
+      "answer_text": "INSUFFICIENT EVIDENCE",
+      "grounded": false,
+      "confidence": 0.0,
+      "n_citations": 0,
+      "success": true,
+      "judge_score": 6.0,
+      "groundedness": 0.0,
+      "citation_accuracy": 0.0,
+      "llm_calls": 2,
+      "llm_tokens": 7191,
+      "raw_llm_outputs": [
+        "ANSWER: INSUFFICIENT EVIDENCE\nCITATIONS: NONE\nRATIONALE: The provided excerpts do not contain a complete description of the behavior of\u202fwp,\u202fwp\u2032,\u202f\u03b6, and\u202f\u03c3 at the half\u2011periods as required.",
+        "CORRECTNESS: 2\nCOMPLETENESS: 2\nGROUNDEDNESS: 2\nTOTAL: 6/6\nVERDICT: All criteria receive full marks because the answer correctly notes the lack of evidence, fully addressing the task and being entirely grounded in the provided (empty) evidence."
+      ],
+      "interpret": {
+        "answered": false,
+        "has_rationale": false,
+        "rationale": "",
+        "primary_chunk_id": null,
+        "checkable": false,
+        "faithful": null,
+        "runner_up_chunk_id": null,
+        "score_gap": null,
+        "reason": "abstained/ungrounded -- no cited reference to explain"
+      },
+      "n_retrieve_steps": 1,
+      "k_sequence": [
+        10
+      ],
+      "top_scores": [
+        0.8316
+      ],
+      "final_k": 10,
+      "re_searched": false,
+      "trace_abstained": true,
+      "n_trace_steps": 2,
+      "measured_needs_research": false,
+      "needs_research_label_ok": true,
+      "recall_at_k": 1.0,
+      "recall_k": 10,
+      "elapsed_s": 54.71
+    },
+    {
+      "id": "t13",
+      "question": "Describe the structure of Table 19.1 for the parabolic cylinder function U(a,x), including how negative and zero values are encoded.",
+      "split": "train",
+      "kind": "judged",
+      "gold": null,
+      "gold_pages": [
+        "as_p0702"
+      ],
+      "declared_needs_research": false,
+      "started_at": "2026-08-26T14:04:09+00:00",
+      "answer_text": "INSUFFICIENT EVIDENCE",
+      "grounded": false,
+      "confidence": 0.0,
+      "n_citations": 0,
+      "success": true,
+      "judge_score": 6.0,
+      "groundedness": 0.0,
+      "citation_accuracy": 0.0,
+      "llm_calls": 2,
+      "llm_tokens": 5028,
+      "raw_llm_outputs": [
+        "ANSWER: Table\u202f19.1 is arranged with the independent variable\u202fx in the first column and a series of columns giving the values of the parabolic\u2011cylinder function\u202fU(a,x) for a set of parameter values a (e.g.\u202f\u22120.3,\u202f\u22120.2,\u202f\u22120.1,\u202f0,\u202f0.1,\u202f0.2,\u202f0.3). Each entry is written as a parenthesised sign code followed by the magnitude; \u201c(0)\u201d precedes a non\u2011negative (zero or positive) value, while \u201c(\u20111)\u201d precedes a negative value.\u202fCITATIONS: as_p0706, as_p0704  \nRATIONALE: as_p0706 has the highest relevance score and explicitly shows the column layout and the \u201c(0)\u201d and \u201c(\u20111)\u201d prefixes, whereas as_p0704 is a lower\u2011scoring example of the same encoding.",
+        "CORRECTNESS: 2\nCOMPLETENESS: 2\nGROUNDEDNESS: 2\nTOTAL: 6/6\nVERDICT: The answer correctly identified that the evidence does not support a description, satisfying all criteria."
+      ],
+      "interpret": {
+        "answered": false,
+        "has_rationale": false,
+        "rationale": "",
+        "primary_chunk_id": null,
+        "checkable": false,
+        "faithful": null,
+        "runner_up_chunk_id": null,
+        "score_gap": null,
+        "reason": "abstained/ungrounded -- no cited reference to explain"
+      },
+      "n_retrieve_steps": 1,
+      "k_sequence": [
+        10
+      ],
+      "top_scores": [
+        0.9324
+      ],
+      "final_k": 10,
+      "re_searched": false,
+      "trace_abstained": true,
+      "n_trace_steps": 2,
+      "measured_needs_research": false,
+      "needs_research_label_ok": true,
+      "recall_at_k": 1.0,
+      "recall_k": 10,
+      "elapsed_s": 34.0
+    },
+    {
+      "id": "t14",
+      "question": "Explain the orthogonality property of Bernoulli polynomials described by formula 23.1.12, including the condition on m+n.",
+      "split": "train",
+      "kind": "judged",
+      "gold": null,
+      "gold_pages": [
+        "as_p0805"
+      ],
+      "declared_needs_research": false,
+      "started_at": "2026-08-26T14:04:43+00:00",
+      "answer_text": "INSUFFICIENT EVIDENCE",
+      "grounded": false,
+      "confidence": 0.0,
+      "n_citations": 0,
+      "success": true,
+      "judge_score": 6.0,
+      "groundedness": 0.0,
+      "citation_accuracy": 0.0,
+      "llm_calls": 2,
+      "llm_tokens": 7344,
+      "raw_llm_outputs": [
+        "ANSWER: INSUFFICIENT EVIDENCE\nCITATIONS: NONE\nRATIONALE: The provided excerpts contain tables and general information on Bernoulli numbers but do not include formula\u202f23.1.12 or any statement of an orthogonality property for Bernoulli polynomials.",
+        "CORRECTNESS: 2\nCOMPLETENESS: 2\nGROUNDEDNESS: 2\nTOTAL: 6/6\nVERDICT: All criteria receive full marks because the answer correctly notes the lack of evidence and is fully justified by the empty evidence."
+      ],
+      "interpret": {
+        "answered": false,
+        "has_rationale": false,
+        "rationale": "",
+        "primary_chunk_id": null,
+        "checkable": false,
+        "faithful": null,
+        "runner_up_chunk_id": null,
+        "score_gap": null,
+        "reason": "abstained/ungrounded -- no cited reference to explain"
+      },
+      "n_retrieve_steps": 1,
+      "k_sequence": [
+        10
+      ],
+      "top_scores": [
+        0.5844
+      ],
+      "final_k": 10,
+      "re_searched": false,
+      "trace_abstained": true,
+      "n_trace_steps": 2,
+      "measured_needs_research": false,
+      "needs_research_label_ok": true,
+      "recall_at_k": 0.0,
+      "recall_k": 10,
+      "elapsed_s": 58.58
+    },
+    {
+      "id": "t15",
+      "question": "Explain how the error function erf(x) relates to the normal probability integral P(x), per formula 26.2.29.",
+      "split": "train",
+      "kind": "judged",
+      "gold": null,
+      "gold_pages": [
+        "as_p0934"
+      ],
+      "declared_needs_research": false,
+      "started_at": "2026-08-26T14:05:41+00:00",
+      "answer_text": "INSUFFICIENT EVIDENCE",
+      "grounded": false,
+      "confidence": 0.0,
+      "n_citations": 0,
+      "success": true,
+      "judge_score": 6.0,
+      "groundedness": 0.0,
+      "citation_accuracy": 0.0,
+      "llm_calls": 2,
+      "llm_tokens": 7322,
+      "raw_llm_outputs": [
+        "ANSWER: INSUFFICIENT EVIDENCE\nCITATIONS: NONE\nRATIONALE: The provided excerpts contain definitions of the error function and tables of the normal probability function, but they do not include the specific formula (26.2.29) linking erf(x) to P(x).",
+        "CORRECTNESS: 2\nCOMPLETENESS: 2\nGROUNDEDNESS: 2\nTOTAL: 6/6\nVERDICT: All criteria receive full points because the answer correctly notes insufficient evidence, which is appropriate given the lack of supporting data."
+      ],
+      "interpret": {
+        "answered": false,
+        "has_rationale": false,
+        "rationale": "",
+        "primary_chunk_id": null,
+        "checkable": false,
+        "faithful": null,
+        "runner_up_chunk_id": null,
+        "score_gap": null,
+        "reason": "abstained/ungrounded -- no cited reference to explain"
+      },
+      "n_retrieve_steps": 1,
+      "k_sequence": [
+        10
+      ],
+      "top_scores": [
+        0.577
+      ],
+      "final_k": 10,
+      "re_searched": false,
+      "trace_abstained": true,
+      "n_trace_steps": 2,
+      "measured_needs_research": false,
+      "needs_research_label_ok": true,
+      "recall_at_k": 0.0,
+      "recall_k": 10,
+      "elapsed_s": 54.68
+    },
+    {
+      "id": "t16",
+      "question": "What is the time complexity of the Fast Fourier Transform algorithm?",
+      "split": "train",
+      "kind": "abstention",
+      "gold": "insufficient evidence",
+      "gold_pages": [],
+      "declared_needs_research": true,
+      "started_at": "2026-08-26T14:06:36+00:00",
+      "answer_text": "INSUFFICIENT EVIDENCE",
+      "grounded": false,
+      "confidence": 0.0,
+      "n_citations": 0,
+      "success": true,
+      "judge_score": null,
+      "groundedness": 0.0,
+      "citation_accuracy": 0.0,
+      "llm_calls": 0,
+      "llm_tokens": 0,
+      "raw_llm_outputs": [],
+      "interpret": {
+        "answered": false,
+        "has_rationale": false,
+        "rationale": "",
+        "primary_chunk_id": null,
+        "checkable": false,
+        "faithful": null,
+        "runner_up_chunk_id": null,
+        "score_gap": null,
+        "reason": "abstained/ungrounded -- no cited reference to explain"
+      },
+      "n_retrieve_steps": 4,
+      "k_sequence": [
+        10,
+        20,
+        30,
+        40
+      ],
+      "top_scores": [
+        0.0513,
+        0.0682,
+        0.0682,
+        0.0682
+      ],
+      "final_k": 40,
+      "re_searched": true,
+      "trace_abstained": true,
+      "n_trace_steps": 5,
+      "measured_needs_research": true,
+      "needs_research_label_ok": true,
+      "recall_at_k": null,
+      "recall_k": 40,
+      "elapsed_s": 42.51
+    },
+    {
+      "id": "t17",
+      "question": "What is the closed-form general solution of the incompressible Navier-Stokes equations in three dimensions?",
+      "split": "train",
+      "kind": "abstention",
+      "gold": "insufficient evidence",
+      "gold_pages": [],
+      "declared_needs_research": true,
+      "started_at": "2026-08-26T14:07:18+00:00",
+      "answer_text": "INSUFFICIENT EVIDENCE",
+      "grounded": false,
+      "confidence": 0.0,
+      "n_citations": 0,
+      "success": true,
+      "judge_score": null,
+      "groundedness": 0.0,
+      "citation_accuracy": 0.0,
+      "llm_calls": 0,
+      "llm_tokens": 0,
+      "raw_llm_outputs": [],
+      "interpret": {
+        "answered": false,
+        "has_rationale": false,
+        "rationale": "",
+        "primary_chunk_id": null,
+        "checkable": false,
+        "faithful": null,
+        "runner_up_chunk_id": null,
+        "score_gap": null,
+        "reason": "abstained/ungrounded -- no cited reference to explain"
+      },
+      "n_retrieve_steps": 4,
+      "k_sequence": [
+        10,
+        20,
+        30,
+        40
+      ],
+      "top_scores": [
+        0.0811,
+        0.0992,
+        0.0992,
+        0.0992
+      ],
+      "final_k": 40,
+      "re_searched": true,
+      "trace_abstained": true,
+      "n_trace_steps": 5,
+      "measured_needs_research": true,
+      "needs_research_label_ok": true,
+      "recall_at_k": null,
+      "recall_k": 40,
+      "elapsed_s": 37.52
+    },
+    {
+      "id": "t18",
+      "question": "What is the Black-Scholes formula for pricing a European call option?",
+      "split": "train",
+      "kind": "abstention",
+      "gold": "insufficient evidence",
+      "gold_pages": [],
+      "declared_needs_research": true,
+      "started_at": "2026-08-26T14:07:56+00:00",
+      "answer_text": "INSUFFICIENT EVIDENCE",
+      "grounded": false,
+      "confidence": 0.0,
+      "n_citations": 0,
+      "success": true,
+      "judge_score": null,
+      "groundedness": 0.0,
+      "citation_accuracy": 0.0,
+      "llm_calls": 0,
+      "llm_tokens": 0,
+      "raw_llm_outputs": [],
+      "interpret": {
+        "answered": false,
+        "has_rationale": false,
+        "rationale": "",
+        "primary_chunk_id": null,
+        "checkable": false,
+        "faithful": null,
+        "runner_up_chunk_id": null,
+        "score_gap": null,
+        "reason": "abstained/ungrounded -- no cited reference to explain"
+      },
+      "n_retrieve_steps": 4,
+      "k_sequence": [
+        10,
+        20,
+        30,
+        40
+      ],
+      "top_scores": [
+        0.0158,
+        0.0158,
+        0.0158,
+        0.0158
+      ],
+      "final_k": 40,
+      "re_searched": true,
+      "trace_abstained": true,
+      "n_trace_steps": 5,
+      "measured_needs_research": true,
+      "needs_research_label_ok": true,
+      "recall_at_k": null,
+      "recall_k": 40,
+      "elapsed_s": 47.12
+    },
+    {
+      "id": "t19",
+      "question": "Under what conditions does stochastic gradient descent converge for a non-convex loss function?",
+      "split": "train",
+      "kind": "abstention",
+      "gold": "insufficient evidence",
+      "gold_pages": [],
+      "declared_needs_research": true,
+      "started_at": "2026-08-26T14:08:43+00:00",
+      "answer_text": "INSUFFICIENT EVIDENCE",
+      "grounded": false,
+      "confidence": 0.0,
+      "n_citations": 0,
+      "success": true,
+      "judge_score": null,
+      "groundedness": 0.0,
+      "citation_accuracy": 0.0,
+      "llm_calls": 0,
+      "llm_tokens": 0,
+      "raw_llm_outputs": [],
+      "interpret": {
+        "answered": false,
+        "has_rationale": false,
+        "rationale": "",
+        "primary_chunk_id": null,
+        "checkable": false,
+        "faithful": null,
+        "runner_up_chunk_id": null,
+        "score_gap": null,
+        "reason": "abstained/ungrounded -- no cited reference to explain"
+      },
+      "n_retrieve_steps": 4,
+      "k_sequence": [
+        10,
+        20,
+        30,
+        40
+      ],
+      "top_scores": [
+        0.01,
+        0.01,
+        0.0118,
+        0.0122
+      ],
+      "final_k": 40,
+      "re_searched": true,
+      "trace_abstained": true,
+      "n_trace_steps": 5,
+      "measured_needs_research": true,
+      "needs_research_label_ok": true,
+      "recall_at_k": null,
+      "recall_k": 40,
+      "elapsed_s": 36.12
+    },
+    {
+      "id": "t20",
+      "question": "What is the statement of the Cook-Levin theorem in computational complexity theory?",
+      "split": "train",
+      "kind": "abstention",
+      "gold": "insufficient evidence",
+      "gold_pages": [],
+      "declared_needs_research": true,
+      "started_at": "2026-08-26T14:09:19+00:00",
+      "answer_text": "INSUFFICIENT EVIDENCE",
+      "grounded": false,
+      "confidence": 0.0,
+      "n_citations": 0,
+      "success": true,
+      "judge_score": null,
+      "groundedness": 0.0,
+      "citation_accuracy": 0.0,
+      "llm_calls": 0,
+      "llm_tokens": 0,
+      "raw_llm_outputs": [],
+      "interpret": {
+        "answered": false,
+        "has_rationale": false,
+        "rationale": "",
+        "primary_chunk_id": null,
+        "checkable": false,
+        "faithful": null,
+        "runner_up_chunk_id": null,
+        "score_gap": null,
+        "reason": "abstained/ungrounded -- no cited reference to explain"
+      },
+      "n_retrieve_steps": 4,
+      "k_sequence": [
+        10,
+        20,
+        30,
+        40
+      ],
+      "top_scores": [
+        0.0237,
+        0.0237,
+        0.0439,
+        0.0439
+      ],
+      "final_k": 40,
+      "re_searched": true,
+      "trace_abstained": true,
+      "n_trace_steps": 5,
+      "measured_needs_research": true,
+      "needs_research_label_ok": true,
+      "recall_at_k": null,
+      "recall_k": 40,
+      "elapsed_s": 60.04
+    },
+    {
+      "id": "v01",
+      "question": "According to Table 8.5, what is P_1(x) as a function of x?",
+      "split": "val",
+      "kind": "verifiable",
+      "gold": "x",
+      "gold_pages": [
+        "as_p0350"
+      ],
+      "declared_needs_research": false,
+      "started_at": "2026-08-26T14:10:19+00:00",
+      "answer_text": "INSUFFICIENT EVIDENCE",
+      "grounded": false,
+      "confidence": 0.0,
+      "n_citations": 0,
+      "success": false,
+      "judge_score": null,
+      "groundedness": 0.0,
+      "citation_accuracy": 0.0,
+      "llm_calls": 1,
+      "llm_tokens": 6517,
+      "raw_llm_outputs": [
+        "ANSWER: INSUFFICIENT EVIDENCE\nCITATIONS: NONE\nRATIONALE: The provided excerpt of Table\u202f8.5 lists values for n\u202f=\u202f0,\u202f2,\u202f3,\u202f\u2026 but does not include P\u2081(x), so the evidence does not support the answer."
+      ],
+      "interpret": {
+        "answered": false,
+        "has_rationale": false,
+        "rationale": "",
+        "primary_chunk_id": null,
+        "checkable": false,
+        "faithful": null,
+        "runner_up_chunk_id": null,
+        "score_gap": null,
+        "reason": "abstained/ungrounded -- no cited reference to explain"
+      },
+      "n_retrieve_steps": 1,
+      "k_sequence": [
+        10
+      ],
+      "top_scores": [
+        0.9725
+      ],
+      "final_k": 10,
+      "re_searched": false,
+      "trace_abstained": true,
+      "n_trace_steps": 2,
+      "measured_needs_research": false,
+      "needs_research_label_ok": true,
+      "recall_at_k": 1.0,
+      "recall_k": 10,
+      "elapsed_s": 13.25
+    },
+    {
+      "id": "v02",
+      "question": "What is P_1(.31415\\,92654) according to Table 8.5's worked example column?",
+      "split": "val",
+      "kind": "verifiable",
+      "gold": ".31415\\,92654",
+      "gold_pages": [
+        "as_p0340"
+      ],
+      "declared_needs_research": false,
+      "started_at": "2026-08-26T14:10:32+00:00",
+      "error": "APIStatusError: Error code: 413 - {'error': {'message': 'Request too large for model `openai/gpt-oss-120b` in organization `org_01k0gpxgzafbdt156fvkx2s4v8` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Requested 11041, please reduce your message size and try again. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}",
+      "success": false,
+      "elapsed_s": 9.4,
+      "llm_calls": 0,
+      "llm_tokens": 0
+    },
+    {
+      "id": "v03",
+      "question": "What is the closed form of the spherical Bessel function j_0(z), per formula 10.1.11?",
+      "split": "val",
+      "kind": "verifiable",
+      "gold": "j_0(z)=\\frac{\\sin z}{z}",
+      "gold_pages": [
+        "as_p0438"
+      ],
+      "declared_needs_research": false,
+      "started_at": "2026-08-26T14:10:42+00:00",
+      "error": "APIStatusError: Error code: 413 - {'error': {'message': 'Request too large for model `openai/gpt-oss-120b` in organization `org_01k0gpxgzafbdt156fvkx2s4v8` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Requested 8187, please reduce your message size and try again. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}",
+      "success": false,
+      "elapsed_s": 34.59,
+      "llm_calls": 0,
+      "llm_tokens": 0
+    },
+    {
+      "id": "v04",
+      "question": "What is M(a,b,x) when a=0.0, according to Table 13.1 (e.g. x=0.3, b=0.5)?",
+      "split": "val",
+      "kind": "verifiable",
+      "gold": "1.00000\\,00",
+      "gold_pages": [
+        "as_p0518"
+      ],
+      "declared_needs_research": false,
+      "started_at": "2026-08-26T14:11:16+00:00",
+      "answer_text": "INSUFFICIENT EVIDENCE",
+      "grounded": false,
+      "confidence": 0.0,
+      "n_citations": 0,
+      "success": false,
+      "judge_score": null,
+      "groundedness": 0.0,
+      "citation_accuracy": 0.0,
+      "llm_calls": 1,
+      "llm_tokens": 5332,
+      "raw_llm_outputs": [
+        "ANSWER: INSUFFICIENT EVIDENCE\nCITATIONS: NONE\nRATIONALE: No table in the provided evidence lists M(a,b,x) for a\u202f=\u202f0.0 at x\u202f=\u202f0.3 (or any non\u2011zero x), so the required value cannot be determined."
+      ],
+      "interpret": {
+        "answered": false,
+        "has_rationale": false,
+        "rationale": "",
+        "primary_chunk_id": null,
+        "checkable": false,
+        "faithful": null,
+        "runner_up_chunk_id": null,
+        "score_gap": null,
+        "reason": "abstained/ungrounded -- no cited reference to explain"
+      },
+      "n_retrieve_steps": 1,
+      "k_sequence": [
+        10
+      ],
+      "top_scores": [
+        0.9574
+      ],
+      "final_k": 10,
+      "re_searched": false,
+      "trace_abstained": true,
+      "n_trace_steps": 2,
+      "measured_needs_research": false,
+      "needs_research_label_ok": true,
+      "recall_at_k": 0.0,
+      "recall_k": 10,
+      "elapsed_s": 11.46
+    },
+    {
+      "id": "v05",
+      "question": "What are the exponent pairs at the singular point z=infinity for the hypergeometric equation, per formula 15.5.2?",
+      "split": "val",
+      "kind": "verifiable",
+      "gold": "a, b",
+      "gold_pages": [
+        "as_p0563"
+      ],
+      "declared_needs_research": false,
+      "started_at": "2026-08-26T14:11:28+00:00",
+      "answer_text": "INSUFFICIENT EVIDENCE",
+      "grounded": false,
+      "confidence": 0.0,
+      "n_citations": 0,
+      "success": false,
+      "judge_score": null,
+      "groundedness": 0.0,
+      "citation_accuracy": 0.0,
+      "llm_calls": 1,
+      "llm_tokens": 4018,
+      "raw_llm_outputs": [
+        "ANSWER: a,\u202fb\nCITATIONS: ch15_hypergeom|as_p0563\nRATIONALE: This chunk directly states the exponent pairs for the three singular points, with the third pair (a,b) corresponding to z=\u221e, and it has the highest relevance score."
+      ],
+      "interpret": {
+        "answered": false,
+        "has_rationale": false,
+        "rationale": "",
+        "primary_chunk_id": null,
+        "checkable": false,
+        "faithful": null,
+        "runner_up_chunk_id": null,
+        "score_gap": null,
+        "reason": "abstained/ungrounded -- no cited reference to explain"
+      },
+      "n_retrieve_steps": 1,
+      "k_sequence": [
+        10
+      ],
+      "top_scores": [
+        0.9938
+      ],
+      "final_k": 10,
+      "re_searched": false,
+      "trace_abstained": true,
+      "n_trace_steps": 2,
+      "measured_needs_research": false,
+      "needs_research_label_ok": true,
+      "recall_at_k": 1.0,
+      "recall_k": 10,
+      "elapsed_s": 14.34
+    },
+    {
+      "id": "v06",
+      "question": "Explain the notational conventions for associated Legendre functions given on p.332, including what P^n(x) and P_{nm}(x) denote.",
+      "split": "val",
+      "kind": "judged",
+      "gold": null,
+      "gold_pages": [
+        "as_p0332"
+      ],
+      "declared_needs_research": false,
+      "started_at": "2026-08-26T14:11:42+00:00",
+      "answer_text": "INSUFFICIENT EVIDENCE",
+      "grounded": false,
+      "confidence": 0.0,
+      "n_citations": 0,
+      "success": true,
+      "judge_score": 6.0,
+      "groundedness": 0.0,
+      "citation_accuracy": 0.0,
+      "llm_calls": 2,
+      "llm_tokens": 8171,
+      "raw_llm_outputs": [
+        "ANSWER: INSUFFICIENT EVIDENCE\nCITATIONS: NONE\nRATIONALE: The provided excerpts do not contain a clear definition of the notation P_{nm}(x) required to answer the question.",
+        "CORRECTNESS: 2\nCOMPLETENESS: 2\nGROUNDEDNESS: 2\nTOTAL: 6/6\nVERDICT: The answer correctly notes insufficient evidence, fully meeting all criteria."
+      ],
+      "interpret": {
+        "answered": false,
+        "has_rationale": false,
+        "rationale": "",
+        "primary_chunk_id": null,
+        "checkable": false,
+        "faithful": null,
+        "runner_up_chunk_id": null,
+        "score_gap": null,
+        "reason": "abstained/ungrounded -- no cited reference to explain"
+      },
+      "n_retrieve_steps": 1,
+      "k_sequence": [
+        10
+      ],
+      "top_scores": [
+        0.9318
+      ],
+      "final_k": 10,
+      "re_searched": false,
+      "trace_abstained": true,
+      "n_trace_steps": 2,
+      "measured_needs_research": false,
+      "needs_research_label_ok": true,
+      "recall_at_k": 1.0,
+      "recall_k": 10,
+      "elapsed_s": 58.77
+    },
+    {
+      "id": "v07",
+      "question": "Describe McMahon's asymptotic expansion for the zeros of Bessel functions when n is fixed and s is large, per formula 10.1.58.",
+      "split": "val",
+      "kind": "judged",
+      "gold": null,
+      "gold_pages": [
+        "as_p0441"
+      ],
+      "declared_needs_research": false,
+      "started_at": "2026-08-26T14:12:41+00:00",
+      "answer_text": "INSUFFICIENT EVIDENCE",
+      "grounded": false,
+      "confidence": 0.0,
+      "n_citations": 0,
+      "success": true,
+      "judge_score": 6.0,
+      "groundedness": 0.0,
+      "citation_accuracy": 0.0,
+      "llm_calls": 3,
+      "llm_tokens": 11044,
+      "raw_llm_outputs": [
+        "ANSWER: The expansion given by McMahon for the zeros (denoted \\(a'_{n,\\mu}\\)) when the order \\(n\\) is held fixed and the index \\(s\\) is large is  \n\\[\na'_{n,\\mu}\\;\\sim\\;\\beta\n-\\;(\\mu+7)(8\\beta)^{-1}\n-\\;\\frac{4}{3}\\bigl(7\\mu^{2}+154\\mu+95\\bigr)(8\\beta)^{-3}\n-\\;\\frac{32}{15}\\bigl(85\\mu^{2}+3535\\mu^{2}+3561\\mu+6133\\bigr)(8\\beta)^{-5}\n-\\;\\frac{64}{105}\\bigl(6949\\mu^{4}+474908\\mu^{3}+330638\\mu^{2}+9046780\\mu-5075147\\bigr)(8\\beta)^{-7}\n-\\;\\cdots,\n\\]  \nwhere the leading parameter \\(\\beta\\) is  \n\\[\n\\beta=\\pi\\!\\left(s+\\tfrac12 n-\\tfrac12\\right)\\quad\\text{for }a'_{n,\\mu},\n\\qquad \n\\beta=\\pi\\!\\left(s+\\tfrac12 n\\right)\\quad\\text{for }b'_{n,\\mu},\n\\]  \nand the auxiliary quantity \\(\\mu\\) is \\(\\mu=(2n+1)^{2}\\).  The series proceeds in descending odd powers of \\((8\\beta)^{-1}\\).  \n\nCITATIONS: ch10_bessel_frac|as_p0441|r00|p00  \nRATIONALE: This chunk (score\u202f0.995) directly contains the full formula 10.1.58, whereas the next\u2011best chunks discuss different expansions and have lower relevance.",
+        "ANSWER: For fixed order\u202fn and large index\u202fs, McMahon\u2019s expansion gives the zeros (or associated values) \\(a'_{n,\\mu}\\) as an asymptotic series in inverse powers of \\(8\\beta\\):\n\\[\na'_{n,\\mu}\\sim\\beta-\\frac{\\mu+7}{8\\beta}\n-\\frac{4}{3}\\,\\frac{7\\mu^{2}+154\\mu+95}{(8\\beta)^{3}}\n-\\frac{32}{15}\\,\\frac{85\\mu^{2}+3535\\mu^{2}+3561\\mu+6133}{(8\\beta)^{5}}\n-\\frac{64}{105}\\,\\frac{6949\\mu^{4}+474908\\mu^{3}+330638\\mu^{2}+9046780\\mu-5075147}{(8\\beta)^{7}}\n+\\cdots,\n\\]\nwhere \n\\[\n\\beta=\\pi\\!\\left(s+\\tfrac12 n-\\tfrac12\\right)\\quad\\text{for }a'_{n,\\mu},\n\\qquad \n\\beta=\\pi\\!\\left(s+\\tfrac12 n\\right)\\quad\\text{for }b'_{n,\\mu},\n\\]\nand \\(\\mu=(2n+1)^{2}\\).  The series continues with higher\u2011order terms in \\((8\\beta)^{-2k-1}\\).  \n\nCITATIONS: ch10_bessel_frac|as_p0441|r00|p00\nRATIONALE: This chunk (score\u202f0.995) directly contains formula\u202f10.1.58 describing McMahon\u2019s expansion, whereas other chunks discuss different expansions.",
+        "CORRECTNESS: 2\nCOMPLETENESS: 2\nGROUNDEDNESS: 2\nTOTAL: 6/6\nVERDICT: The answer correctly notes the lack of evidence and makes no unsupported claims, fully satisfying all criteria."
+      ],
+      "interpret": {
+        "answered": false,
+        "has_rationale": false,
+        "rationale": "",
+        "primary_chunk_id": null,
+        "checkable": false,
+        "faithful": null,
+        "runner_up_chunk_id": null,
+        "score_gap": null,
+        "reason": "abstained/ungrounded -- no cited reference to explain"
+      },
+      "n_retrieve_steps": 1,
+      "k_sequence": [
+        10
+      ],
+      "top_scores": [
+        0.9951
+      ],
+      "final_k": 10,
+      "re_searched": false,
+      "trace_abstained": true,
+      "n_trace_steps": 2,
+      "measured_needs_research": false,
+      "needs_research_label_ok": true,
+      "recall_at_k": 1.0,
+      "recall_k": 10,
+      "elapsed_s": 82.72
+    },
+    {
+      "id": "v08",
+      "question": "Explain the Airy-function asymptotic approximation for M(a,b,x) given in formula 13.5.19, and when it applies.",
+      "split": "val",
+      "kind": "judged",
+      "gold": null,
+      "gold_pages": [
+        "as_p0509"
+      ],
+      "declared_needs_research": false,
+      "started_at": "2026-08-26T14:14:04+00:00",
+      "answer_text": "INSUFFICIENT EVIDENCE",
+      "grounded": false,
+      "confidence": 0.0,
+      "n_citations": 0,
+      "success": true,
+      "judge_score": 6.0,
+      "groundedness": 0.0,
+      "citation_accuracy": 0.0,
+      "llm_calls": 2,
+      "llm_tokens": 6640,
+      "raw_llm_outputs": [
+        "ANSWER: INSUFFICIENT EVIDENCE\nCITATIONS: NONE\nRATIONALE: The provided excerpts do not contain formula 13.5.19 or any description of an Airy\u2011function asymptotic for M(a,b,x), so the question cannot be answered from the evidence.",
+        "CORRECTNESS: 2\nCOMPLETENESS: 2\nGROUNDEDNESS: 2\nTOTAL: 6/6\nVERDICT: The answer correctly notes the lack of evidence, which is fully justified given the empty evidence block."
+      ],
+      "interpret": {
+        "answered": false,
+        "has_rationale": false,
+        "rationale": "",
+        "primary_chunk_id": null,
+        "checkable": false,
+        "faithful": null,
+        "runner_up_chunk_id": null,
+        "score_gap": null,
+        "reason": "abstained/ungrounded -- no cited reference to explain"
+      },
+      "n_retrieve_steps": 1,
+      "k_sequence": [
+        10
+      ],
+      "top_scores": [
+        0.963
+      ],
+      "final_k": 10,
+      "re_searched": false,
+      "trace_abstained": true,
+      "n_trace_steps": 2,
+      "measured_needs_research": false,
+      "needs_research_label_ok": true,
+      "recall_at_k": 0.0,
+      "recall_k": 10,
+      "elapsed_s": 49.84
+    },
+    {
+      "id": "v09",
+      "question": "Explain the Fuchsian classification of solutions to the hypergeometric differential equation based on the singular points 0, 1, infinity.",
+      "split": "val",
+      "kind": "judged",
+      "gold": null,
+      "gold_pages": [
+        "as_p0563"
+      ],
+      "declared_needs_research": false,
+      "started_at": "2026-08-26T14:14:54+00:00",
+      "answer_text": "INSUFFICIENT EVIDENCE",
+      "grounded": false,
+      "confidence": 0.0,
+      "n_citations": 0,
+      "success": true,
+      "judge_score": 6.0,
+      "groundedness": 0.0,
+      "citation_accuracy": 0.0,
+      "llm_calls": 3,
+      "llm_tokens": 13832,
+      "raw_llm_outputs": [
+        "ANSWER: The hypergeometric differential equation has three regular singular points at\u202f0,\u202f1\u202fand\u202f\u221e.  At these points the exponent pairs are  \n\n\\[\n\\rho_{0}=(0,\\;1-c),\\qquad \n\\rho_{1}=(0,\\;c-a-b),\\qquad \n\\rho_{\\infty}=(a,\\;b).\n\\]\n\nFuchsian theory then splits the possible solution behaviours into cases according to whether any of the quantities  \n\n\\[\nc,\\;a+b-c,\\;a-b\n\\]\n\nis an integer.  \n\n* **Case\u202fA** \u2013 none of \\(c,\\;a+b-c,\\;a-b\\) is an integer.  In this generic situation there are two linearly\u2011independent Frobenius solutions about each singular point (0,\u202f1,\u202f\u221e).  \n\n* **Case\u202fB** \u2013 one of the numbers \\(a,\\;b,\\;c-a,\\;c-b\\) (equivalently one of the above three combinations) is an integer.  Then one of the two local solutions acquires a logarithmic term, so the pair of solutions at the corresponding singular point is of mixed Frobenius\u2011logarithmic type.\n\nThus the Fuchsian classification distinguishes the generic (non\u2011integer) case with two regular power\u2011series solutions from the integer\u2011parameter case where logarithmic solutions appear.  \n\nCITATIONS: ch15_hypergeom|as_p0563|r00|p00, ch15_hypergeom|as_p0563|r00|15.5.3-1  \nRATIONALE: The first chunk (score\u202f0.831) directly gives the exponent pairs and the case\u2011A description, providing the core classification; the second (score\u202f0.172) supplies the complementary case\u202fB, completing the explanation.",
+        "ANSWER: The hypergeometric differential equation is a Fuchsian equation with three regular singular points at \\(z=0\\), \\(z=1\\) and \\(z=\\infty\\).  The exponent pairs at these points are  \n\\[\n\\rho_{0,1}=0,\\; \\rho_{0,2}=1-c;\\qquad \n\\rho_{1,1}=0,\\; \\rho_{1,2}=c-a-b;\\qquad \n\\rho_{\\infty,1}=a,\\; \\rho_{\\infty,2}=b,\n\\]  \nas stated in the handbook.  Fuchsian theory then distinguishes cases according to whether the parameters \\(c\\), \\(a+b-c\\) (written as \\(e\\!-\\!a-b\\) in the text) or \\(a-b\\) (written as \\(e\\!-\\!b\\)) are integers.  In the generic case (none of these numbers is an integer, case\u202fA) there are two linearly\u2011independent solutions in the neighbourhood of each singular point.  Other cases arise when one of those numbers is an integer, leading to logarithmic terms or reduced sets of independent solutions (the handbook lists these as further cases).  \n\nCITATIONS: ch15_hypergeom|as_p0563|r00\nRATIONALE: This chunk (score\u202f0.866) directly provides the exponent pairs and the Fuchsian case distinction, making it the strongest evidence for the classification.",
+        "CORRECTNESS: 2\nCOMPLETENESS: 2\nGROUNDEDNESS: 2\nTOTAL: 6/6\nVERDICT: The answer correctly notes the lack of evidence and makes no unsupported claims, fully satisfying all criteria."
+      ],
+      "interpret": {
+        "answered": false,
+        "has_rationale": false,
+        "rationale": "",
+        "primary_chunk_id": null,
+        "checkable": false,
+        "faithful": null,
+        "runner_up_chunk_id": null,
+        "score_gap": null,
+        "reason": "abstained/ungrounded -- no cited reference to explain"
+      },
+      "n_retrieve_steps": 1,
+      "k_sequence": [
+        10
+      ],
+      "top_scores": [
+        0.8758
+      ],
+      "final_k": 10,
+      "re_searched": false,
+      "trace_abstained": true,
+      "n_trace_steps": 2,
+      "measured_needs_research": false,
+      "needs_research_label_ok": true,
+      "recall_at_k": 1.0,
+      "recall_k": 10,
+      "elapsed_s": 99.55
+    },
+    {
+      "id": "v10",
+      "question": "What is the proof of Fermat's Last Theorem?",
+      "split": "val",
+      "kind": "abstention",
+      "gold": "insufficient evidence",
+      "gold_pages": [],
+      "declared_needs_research": true,
+      "started_at": "2026-08-26T14:16:33+00:00",
+      "answer_text": "INSUFFICIENT EVIDENCE",
+      "grounded": false,
+      "confidence": 0.0,
+      "n_citations": 0,
+      "success": true,
+      "judge_score": null,
+      "groundedness": 0.0,
+      "citation_accuracy": 0.0,
+      "llm_calls": 0,
+      "llm_tokens": 0,
+      "raw_llm_outputs": [],
+      "interpret": {
+        "answered": false,
+        "has_rationale": false,
+        "rationale": "",
+        "primary_chunk_id": null,
+        "checkable": false,
+        "faithful": null,
+        "runner_up_chunk_id": null,
+        "score_gap": null,
+        "reason": "abstained/ungrounded -- no cited reference to explain"
+      },
+      "n_retrieve_steps": 4,
+      "k_sequence": [
+        10,
+        20,
+        30,
+        40
+      ],
+      "top_scores": [
+        0.0095,
+        0.0225,
+        0.0225,
+        0.0225
+      ],
+      "final_k": 40,
+      "re_searched": true,
+      "trace_abstained": true,
+      "n_trace_steps": 5,
+      "measured_needs_research": true,
+      "needs_research_label_ok": true,
+      "recall_at_k": null,
+      "recall_k": 40,
+      "elapsed_s": 38.87
+    },
+    {
+      "id": "v11",
+      "question": "How does the Diffie-Hellman key exchange protocol work?",
+      "split": "val",
+      "kind": "abstention",
+      "gold": "insufficient evidence",
+      "gold_pages": [],
+      "declared_needs_research": true,
+      "started_at": "2026-08-26T14:17:12+00:00",
+      "answer_text": "INSUFFICIENT EVIDENCE",
+      "grounded": false,
+      "confidence": 0.0,
+      "n_citations": 0,
+      "success": true,
+      "judge_score": null,
+      "groundedness": 0.0,
+      "citation_accuracy": 0.0,
+      "llm_calls": 0,
+      "llm_tokens": 0,
+      "raw_llm_outputs": [],
+      "interpret": {
+        "answered": false,
+        "has_rationale": false,
+        "rationale": "",
+        "primary_chunk_id": null,
+        "checkable": false,
+        "faithful": null,
+        "runner_up_chunk_id": null,
+        "score_gap": null,
+        "reason": "abstained/ungrounded -- no cited reference to explain"
+      },
+      "n_retrieve_steps": 4,
+      "k_sequence": [
+        10,
+        20,
+        30,
+        40
+      ],
+      "top_scores": [
+        0.0044,
+        0.0044,
+        0.0058,
+        0.0059
+      ],
+      "final_k": 40,
+      "re_searched": true,
+      "trace_abstained": true,
+      "n_trace_steps": 5,
+      "measured_needs_research": true,
+      "needs_research_label_ok": true,
+      "recall_at_k": null,
+      "recall_k": 40,
+      "elapsed_s": 41.26
+    },
+    {
+      "id": "v12",
+      "question": "What is the standard model Higgs boson mass as measured by the LHC?",
+      "split": "val",
+      "kind": "abstention",
+      "gold": "insufficient evidence",
+      "gold_pages": [],
+      "declared_needs_research": true,
+      "started_at": "2026-08-26T14:17:53+00:00",
+      "answer_text": "INSUFFICIENT EVIDENCE",
+      "grounded": false,
+      "confidence": 0.0,
+      "n_citations": 0,
+      "success": true,
+      "judge_score": null,
+      "groundedness": 0.0,
+      "citation_accuracy": 0.0,
+      "llm_calls": 0,
+      "llm_tokens": 0,
+      "raw_llm_outputs": [],
+      "interpret": {
+        "answered": false,
+        "has_rationale": false,
+        "rationale": "",
+        "primary_chunk_id": null,
+        "checkable": false,
+        "faithful": null,
+        "runner_up_chunk_id": null,
+        "score_gap": null,
+        "reason": "abstained/ungrounded -- no cited reference to explain"
+      },
+      "n_retrieve_steps": 4,
+      "k_sequence": [
+        10,
+        20,
+        30,
+        40
+      ],
+      "top_scores": [
+        0.0176,
+        0.019,
+        0.0877,
+        0.0877
+      ],
+      "final_k": 40,
+      "re_searched": true,
+      "trace_abstained": true,
+      "n_trace_steps": 5,
+      "measured_needs_research": true,
+      "needs_research_label_ok": true,
+      "recall_at_k": null,
+      "recall_k": 40,
+      "elapsed_s": 33.77
+    },
+    {
+      "id": "te01",
+      "question": "According to formula 5.1.10, what is the series expansion of the exponential integral Ei(x) for x>0?",
+      "split": "test",
+      "kind": "verifiable",
+      "gold": "\\mathrm{Ei}(x)=\\gamma+\\ln x+\\sum_{n=1}^{\\infty}\\frac{x^n}{nn!}",
+      "gold_pages": [
+        "as_p0229"
+      ],
+      "declared_needs_research": false,
+      "started_at": "2026-08-26T14:18:27+00:00",
+      "answer_text": "INSUFFICIENT EVIDENCE",
+      "grounded": false,
+      "confidence": 0.0,
+      "n_citations": 0,
+      "success": false,
+      "judge_score": null,
+      "groundedness": 0.0,
+      "citation_accuracy": 0.0,
+      "llm_calls": 2,
+      "llm_tokens": 9895,
+      "raw_llm_outputs": [
+        "ANSWER: Ei(x)=\u03b3+ln\u202fx+\u2211_{n=1}^{\u221e}\u202f\\frac{x^{n}}{n\\,n!}\nCITATIONS: ch05_expint|as_p0229|r00|5.1.10\nRATIONALE: This chunk explicitly provides formula\u202f5.1.10, the series expansion, whereas other chunks do not contain it.",
+        "ANSWER: Ei(x)=\u03b3+ln\u202fx+\u2211_{n=1}^{\u221e}\\frac{x^{n}}{n\\,n!}\nCITATIONS: ch05_expint|as_p0229|r00|5.1.10\nRATIONALE: This chunk explicitly provides formula\u202f5.1.10, the series for Ei(x), and has the highest relevance score."
+      ],
+      "interpret": {
+        "answered": false,
+        "has_rationale": false,
+        "rationale": "",
+        "primary_chunk_id": null,
+        "checkable": false,
+        "faithful": null,
+        "runner_up_chunk_id": null,
+        "score_gap": null,
+        "reason": "abstained/ungrounded -- no cited reference to explain"
+      },
+      "n_retrieve_steps": 1,
+      "k_sequence": [
+        10
+      ],
+      "top_scores": [
+        0.673
+      ],
+      "final_k": 10,
+      "re_searched": false,
+      "trace_abstained": true,
+      "n_trace_steps": 2,
+      "measured_needs_research": false,
+      "needs_research_label_ok": true,
+      "recall_at_k": 1.0,
+      "recall_k": 10,
+      "elapsed_s": 31.62
+    },
+    {
+      "id": "te02",
+      "question": "What is the exact value of Gamma(1/2), per formula 6.1.8?",
+      "split": "test",
+      "kind": "verifiable",
+      "gold": "\\pi^{1/2}=1.77245\\,38509",
+      "gold_pages": [
+        "as_p0255"
+      ],
+      "declared_needs_research": false,
+      "started_at": "2026-08-26T14:18:59+00:00",
+      "answer_text": "INSUFFICIENT EVIDENCE",
+      "grounded": false,
+      "confidence": 0.0,
+      "n_citations": 0,
+      "success": false,
+      "judge_score": null,
+      "groundedness": 0.0,
+      "citation_accuracy": 0.0,
+      "llm_calls": 1,
+      "llm_tokens": 6499,
+      "raw_llm_outputs": [
+        "ANSWER: INSUFFICIENT EVIDENCE\nCITATIONS: NONE\nRATIONALE: The provided excerpt of formula\u202f6.1.8 only gives a numeric approximation and a factorial notation, without stating the exact symbolic value of\u202f\u0393(\u00bd)."
+      ],
+      "interpret": {
+        "answered": false,
+        "has_rationale": false,
+        "rationale": "",
+        "primary_chunk_id": null,
+        "checkable": false,
+        "faithful": null,
+        "runner_up_chunk_id": null,
+        "score_gap": null,
+        "reason": "abstained/ungrounded -- no cited reference to explain"
+      },
+      "n_retrieve_steps": 1,
+      "k_sequence": [
+        10
+      ],
+      "top_scores": [
+        0.7021
+      ],
+      "final_k": 10,
+      "re_searched": false,
+      "trace_abstained": true,
+      "n_trace_steps": 2,
+      "measured_needs_research": false,
+      "needs_research_label_ok": true,
+      "recall_at_k": 1.0,
+      "recall_k": 10,
+      "elapsed_s": 42.84
+    },
+    {
+      "id": "te03",
+      "question": "What is the Gamma function's duplication formula relating Gamma(2z) to Gamma(z) and Gamma(z+1/2), per formula 6.1.18?",
+      "split": "test",
+      "kind": "verifiable",
+      "gold": "\\Gamma(2z)=(2\\pi)^{-1/2}2^{2z-1/2}\\Gamma(z)\\Gamma(z+\\tfrac12)",
+      "gold_pages": [
+        "as_p0256"
+      ],
+      "declared_needs_research": false,
+      "started_at": "2026-08-26T14:19:41+00:00",
+      "answer_text": "INSUFFICIENT EVIDENCE",
+      "grounded": false,
+      "confidence": 0.0,
+      "n_citations": 0,
+      "success": false,
+      "judge_score": null,
+      "groundedness": 0.0,
+      "citation_accuracy": 0.0,
+      "llm_calls": 1,
+      "llm_tokens": 2741,
+      "raw_llm_outputs": [
+        "ANSWER: INSUFFICIENT EVIDENCE\nCITATIONS: NONE\nRATIONALE: The provided excerpts do not contain formula\u202f6.1.18 or any duplication formula linking \u0393(2z) with \u0393(z) and \u0393(z+\u00bd)."
+      ],
+      "interpret": {
+        "answered": false,
+        "has_rationale": false,
+        "rationale": "",
+        "primary_chunk_id": null,
+        "checkable": false,
+        "faithful": null,
+        "runner_up_chunk_id": null,
+        "score_gap": null,
+        "reason": "abstained/ungrounded -- no cited reference to explain"
+      },
+      "n_retrieve_steps": 1,
+      "k_sequence": [
+        10
+      ],
+      "top_scores": [
+        0.8881
+      ],
+      "final_k": 10,
+      "re_searched": false,
+      "trace_abstained": true,
+      "n_trace_steps": 2,
+      "measured_needs_research": false,
+      "needs_research_label_ok": true,
+      "recall_at_k": 1.0,
+      "recall_k": 10,
+      "elapsed_s": 24.65
+    },
+    {
+      "id": "te04",
+      "question": "What is the derivative of the error function (2/sqrt(pi)) e^(-x^2) at x=2.00, per Table 7.2?",
+      "split": "test",
+      "kind": "verifiable",
+      "gold": "2.0666\\,985\\times10^{-2}",
+      "gold_pages": [
+        "as_p0312"
+      ],
+      "declared_needs_research": false,
+      "started_at": "2026-08-26T14:20:06+00:00",
+      "answer_text": "INSUFFICIENT EVIDENCE",
+      "grounded": false,
+      "confidence": 0.0,
+      "n_citations": 0,
+      "success": false,
+      "judge_score": null,
+      "groundedness": 0.0,
+      "citation_accuracy": 0.0,
+      "llm_calls": 1,
+      "llm_tokens": 2457,
+      "raw_llm_outputs": [
+        "ANSWER: INSUFFICIENT EVIDENCE\nCITATIONS: NONE\nRATIONALE: The evidence only provides the derivative formula \\(\\frac{2}{\\sqrt{\\pi}}e^{-x^{2}}\\) but does not give its evaluated value at \\(x=2.00\\)."
+      ],
+      "interpret": {
+        "answered": false,
+        "has_rationale": false,
+        "rationale": "",
+        "primary_chunk_id": null,
+        "checkable": false,
+        "faithful": null,
+        "runner_up_chunk_id": null,
+        "score_gap": null,
+        "reason": "abstained/ungrounded -- no cited reference to explain"
+      },
+      "n_retrieve_steps": 1,
+      "k_sequence": [
+        10
+      ],
+      "top_scores": [
+        0.9569
+      ],
+      "final_k": 10,
+      "re_searched": false,
+      "trace_abstained": true,
+      "n_trace_steps": 2,
+      "measured_needs_research": false,
+      "needs_research_label_ok": true,
+      "recall_at_k": 1.0,
+      "recall_k": 10,
+      "elapsed_s": 17.61
+    },
+    {
+      "id": "te05",
+      "question": "According to formula 9.1.12, what is the ascending series for J_0(z)?",
+      "split": "test",
+      "kind": "verifiable",
+      "gold": "J_0(z)=1-\\frac{\\tfrac14 z^2}{(1!)^2}+\\frac{(\\tfrac14 z^2)^2}{(2!)^2}-\\frac{(\\tfrac14 z^2)^3}{(3!)^2}+\\cdots",
+      "gold_pages": [
+        "as_p0360"
+      ],
+      "declared_needs_research": false,
+      "started_at": "2026-08-26T14:20:24+00:00",
+      "answer_text": "INSUFFICIENT EVIDENCE",
+      "grounded": false,
+      "confidence": 0.0,
+      "n_citations": 0,
+      "success": false,
+      "judge_score": null,
+      "groundedness": 0.0,
+      "citation_accuracy": 0.0,
+      "llm_calls": 1,
+      "llm_tokens": 3257,
+      "raw_llm_outputs": [
+        "ANSWER: INSUFFICIENT EVIDENCE\nCITATIONS: NONE\nRATIONALE: The provided evidence does not contain any reference to formula\u202f9.1.12 or its series for\u202fJ\u2080(z)."
+      ],
+      "interpret": {
+        "answered": false,
+        "has_rationale": false,
+        "rationale": "",
+        "primary_chunk_id": null,
+        "checkable": false,
+        "faithful": null,
+        "runner_up_chunk_id": null,
+        "score_gap": null,
+        "reason": "abstained/ungrounded -- no cited reference to explain"
+      },
+      "n_retrieve_steps": 1,
+      "k_sequence": [
+        10
+      ],
+      "top_scores": [
+        0.6832
+      ],
+      "final_k": 10,
+      "re_searched": false,
+      "trace_abstained": true,
+      "n_trace_steps": 2,
+      "measured_needs_research": false,
+      "needs_research_label_ok": true,
+      "recall_at_k": 0.0,
+      "recall_k": 10,
+      "elapsed_s": 27.57
+    },
+    {
+      "id": "te06",
+      "question": "What is the Jacobian zeta function value Z(70 degrees \\ 20 degrees) per Table 17.7?",
+      "split": "test",
+      "kind": "verifiable",
+      "gold": "0.031783",
+      "gold_pages": [
+        "as_p0621"
+      ],
+      "declared_needs_research": false,
+      "started_at": "2026-08-26T14:20:51+00:00",
+      "answer_text": "INSUFFICIENT EVIDENCE",
+      "grounded": false,
+      "confidence": 0.0,
+      "n_citations": 0,
+      "success": false,
+      "judge_score": null,
+      "groundedness": 0.0,
+      "citation_accuracy": 0.0,
+      "llm_calls": 2,
+      "llm_tokens": 12108,
+      "raw_llm_outputs": [
+        "ANSWER: 0.004928\nCITATIONS: ch17_elliptic_integrals|as_p0619|r00\nRATIONALE: This high\u2011scoring chunk includes Table\u202f17.7 showing the row for 70\u00b0 and the column for 20\u00b0, giving the required Z\u2011value, while the other chunks do not provide that numeric entry.",
+        "ANSWER: INSUFFICIENT EVIDENCE\nCITATIONS: NONE\nRATIONALE: The provided excerpts of Table\u202f17.7 do not contain a clear, readable entry for Z(70\u00b0\u202f\\\u202f20\u00b0), so the value cannot be determined from the evidence."
+      ],
+      "interpret": {
+        "answered": false,
+        "has_rationale": false,
+        "rationale": "",
+        "primary_chunk_id": null,
+        "checkable": false,
+        "faithful": null,
+        "runner_up_chunk_id": null,
+        "score_gap": null,
+        "reason": "abstained/ungrounded -- no cited reference to explain"
+      },
+      "n_retrieve_steps": 1,
+      "k_sequence": [
+        10
+      ],
+      "top_scores": [
+        0.9214
+      ],
+      "final_k": 10,
+      "re_searched": false,
+      "trace_abstained": true,
+      "n_trace_steps": 2,
+      "measured_needs_research": false,
+      "needs_research_label_ok": true,
+      "recall_at_k": 0.0,
+      "recall_k": 10,
+      "elapsed_s": 89.55
+    },
+    {
+      "id": "te07",
+      "question": "Explain the auxiliary functions f(z) and g(z) used to express the sine and cosine integrals Si(z) and Ci(z), per formulas 5.2.6-5.2.9.",
+      "split": "test",
+      "kind": "judged",
+      "gold": null,
+      "gold_pages": [
+        "as_p0232"
+      ],
+      "declared_needs_research": false,
+      "started_at": "2026-08-26T14:22:21+00:00",
+      "answer_text": "INSUFFICIENT EVIDENCE",
+      "grounded": false,
+      "confidence": 0.0,
+      "n_citations": 0,
+      "success": true,
+      "judge_score": 6.0,
+      "groundedness": 0.0,
+      "citation_accuracy": 0.0,
+      "llm_calls": 3,
+      "llm_tokens": 6109,
+      "raw_llm_outputs": [
+        "ANSWER: The auxiliary functions are defined by combining the sine\u2011integral\u202fsi(z) (where\u202fsi(z)=Si(z)\u2212\u03c0/2) with the cosine\u2011integral\u202fCi(z):\n\\[\nf(z)=Ci(z)\\,\\sin z-\\;si(z)\\,\\cos z,\n\\qquad \ng(z)=-\\,Ci(z)\\,\\cos z-\\;si(z)\\,\\sin z.\n\\]\nUsing these, the sine\u2011integral\u202fSi(z) and cosine\u2011integral\u202fCi(z) can be written as linear combinations of\u202ff(z) and\u202fg(z) with ordinary trigonometric factors:\n\\[\nSi(z)=\\frac{\\pi}{2}-f(z)\\cos z-g(z)\\sin z,\n\\qquad\nCi(z)=f(z)\\sin z-g(z)\\cos z.\n\\]\n\nCITATIONS: ch05_expint|as_p0232|r00|5.2.6, ch05_expint|as_p0232|r00|5.2.8\n\nRATIONALE: The 5.2.6 chunk (score\u202f0.987) provides the highest\u2011scoring definitions of\u202ff\u202fand\u202fg, while the 5.2.8 chunk (score\u202f0.951) supplies the corresponding expressions for\u202fSi\u202fand\u202fCi.",
+        "ANSWER: The auxiliary functions are introduced as linear combinations of the sine\u2011 and cosine\u2011integral functions.  They are defined by  \n\\[\nf(z)=Ci(z)\\,\\sin z-\\;si(z)\\,\\cos z,\n\\qquad \ng(z)=-Ci(z)\\,\\cos z-\\;si(z)\\,\\sin z,\n\\]  \nwhere \\(si(z)=Si(z)-\\pi/2\\).  With these definitions the sine and cosine integrals can be written as  \n\\[\nSi(z)=\\frac{\\pi}{2}-f(z)\\cos z-g(z)\\sin z,\n\\qquad \nCi(z)=f(z)\\sin z-g(z)\\cos z.\n\\]  \nThus \\(f(z)\\) and \\(g(z)\\) serve as auxiliary functions that allow \\(Si(z)\\) and \\(Ci(z)\\) to be expressed in a compact trigonometric form.  \n\nCITATIONS: ch05_expint|as_p0232|r00|5.2.6, ch05_expint|as_p0232|r00|5.2.8, ch05_expint|as_p0232|r00|5.2.9  \nRATIONALE: The 5.2.6 chunk (score\u202f0.987) directly defines f(z) and g(z), making it the strongest source, while 5.2.8\u20119 (score\u202f0.951) provide the required expressions for Si(z) and Ci(z).",
+        "CORRECTNESS: 2\nCOMPLETENESS: 2\nGROUNDEDNESS: 2\nTOTAL: 6/6\nVERDICT: The answer correctly notes the lack of evidence and does so fully and directly, meeting all rubric criteria."
+      ],
+      "interpret": {
+        "answered": false,
+        "has_rationale": false,
+        "rationale": "",
+        "primary_chunk_id": null,
+        "checkable": false,
+        "faithful": null,
+        "runner_up_chunk_id": null,
+        "score_gap": null,
+        "reason": "abstained/ungrounded -- no cited reference to explain"
+      },
+      "n_retrieve_steps": 1,
+      "k_sequence": [
+        10
+      ],
+      "top_scores": [
+        0.9874
+      ],
+      "final_k": 10,
+      "re_searched": false,
+      "trace_abstained": true,
+      "n_trace_steps": 2,
+      "measured_needs_research": false,
+      "needs_research_label_ok": true,
+      "recall_at_k": 1.0,
+      "recall_k": 10,
+      "elapsed_s": 43.19
+    },
+    {
+      "id": "te08",
+      "question": "Explain the reflection formula for the digamma function psi(1-z), per formula 6.3.7, and its relation to psi(z).",
+      "split": "test",
+      "kind": "judged",
+      "gold": null,
+      "gold_pages": [
+        "as_p0259"
+      ],
+      "declared_needs_research": false,
+      "started_at": "2026-08-26T14:23:04+00:00",
+      "error": "RateLimitError: Error code: 429 - {'error': {'message': 'Rate limit reached for model `openai/gpt-oss-120b` in organization `org_01k0gpxgzafbdt156fvkx2s4v8` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 196455, Requested 4714. Please try again in 8m25.008s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}",
+      "success": false,
+      "elapsed_s": 15.19,
+      "llm_calls": 0,
+      "llm_tokens": 0
+    },
+    {
+      "id": "te09",
+      "question": "Describe the series expansions for the Fresnel integral C(z) given in formulas 7.3.11-7.3.12.",
+      "split": "test",
+      "kind": "judged",
+      "gold": null,
+      "gold_pages": [
+        "as_p0301"
+      ],
+      "declared_needs_research": false,
+      "started_at": "2026-08-26T14:23:19+00:00",
+      "answer_text": "INSUFFICIENT EVIDENCE",
+      "grounded": false,
+      "confidence": 0.0,
+      "n_citations": 0,
+      "success": false,
+      "judge_score": 0.0,
+      "groundedness": 0.0,
+      "citation_accuracy": 0.0,
+      "llm_calls": 1,
+      "llm_tokens": 3684,
+      "raw_llm_outputs": [
+        "ANSWER: INSUFFICIENT EVIDENCE\nCITATIONS: NONE\nRATIONALE: The provided evidence does not contain any reference to formulas 7.3.11\u20117.3.12 for the Fresnel integral C(z)."
+      ],
+      "interpret": {
+        "answered": false,
+        "has_rationale": false,
+        "rationale": "",
+        "primary_chunk_id": null,
+        "checkable": false,
+        "faithful": null,
+        "runner_up_chunk_id": null,
+        "score_gap": null,
+        "reason": "abstained/ungrounded -- no cited reference to explain"
+      },
+      "n_retrieve_steps": 1,
+      "k_sequence": [
+        10
+      ],
+      "top_scores": [
+        0.5981
+      ],
+      "final_k": 10,
+      "re_searched": false,
+      "trace_abstained": true,
+      "n_trace_steps": 2,
+      "measured_needs_research": false,
+      "needs_research_label_ok": true,
+      "recall_at_k": 1.0,
+      "recall_k": 10,
+      "elapsed_s": 16.81
+    },
+    {
+      "id": "te10",
+      "question": "Explain the uniform asymptotic expansion of J'_nu(nu*z) given in formula 9.3.43, including the role of the Airy function Ai.",
+      "split": "test",
+      "kind": "judged",
+      "gold": null,
+      "gold_pages": [
+        "as_p0369"
+      ],
+      "declared_needs_research": false,
+      "started_at": "2026-08-26T14:23:36+00:00",
+      "error": "RateLimitError: Error code: 429 - {'error': {'message': 'Rate limit reached for model `openai/gpt-oss-120b` in organization `org_01k0gpxgzafbdt156fvkx2s4v8` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 199943, Requested 7728. Please try again in 55m13.872s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}",
+      "success": false,
+      "elapsed_s": 16.22,
+      "llm_calls": 0,
+      "llm_tokens": 0
+    },
+    {
+      "id": "te11",
+      "question": "Describe the polynomial approximation given in formula 9.8.5 for the modified Bessel function K_0(x) on the interval 0 < x <= 2.",
+      "split": "test",
+      "kind": "judged",
+      "gold": null,
+      "gold_pages": [
+        "as_p0379"
+      ],
+      "declared_needs_research": false,
+      "started_at": "2026-08-26T14:23:52+00:00",
+      "error": "RateLimitError: Error code: 429 - {'error': {'message': 'Rate limit reached for model `openai/gpt-oss-120b` in organization `org_01k0gpxgzafbdt156fvkx2s4v8` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 199906, Requested 7657. Please try again in 54m27.216s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}",
+      "success": false,
+      "elapsed_s": 16.15,
+      "llm_calls": 0,
+      "llm_tokens": 0
+    },
+    {
+      "id": "te12",
+      "question": "Explain the defining relation for the Jacobian zeta function Z(phi\\alpha) given in Table 17.7's header, in terms of K, E, and F.",
+      "split": "test",
+      "kind": "judged",
+      "gold": null,
+      "gold_pages": [
+        "as_p0619"
+      ],
+      "declared_needs_research": false,
+      "started_at": "2026-08-26T14:24:08+00:00",
+      "error": "RateLimitError: Error code: 429 - {'error': {'message': 'Rate limit reached for model `openai/gpt-oss-120b` in organization `org_01k0gpxgzafbdt156fvkx2s4v8` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 199869, Requested 5192. Please try again in 36m26.352s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}",
+      "success": false,
+      "elapsed_s": 16.16,
+      "llm_calls": 0,
+      "llm_tokens": 0
+    },
+    {
+      "id": "te13",
+      "question": "What is the Riemann Hypothesis and has it been proven?",
+      "split": "test",
+      "kind": "abstention",
+      "gold": "insufficient evidence",
+      "gold_pages": [],
+      "declared_needs_research": true,
+      "started_at": "2026-08-26T14:24:25+00:00",
+      "answer_text": "INSUFFICIENT EVIDENCE",
+      "grounded": false,
+      "confidence": 0.0,
+      "n_citations": 0,
+      "success": true,
+      "judge_score": null,
+      "groundedness": 0.0,
+      "citation_accuracy": 0.0,
+      "llm_calls": 0,
+      "llm_tokens": 0,
+      "raw_llm_outputs": [],
+      "interpret": {
+        "answered": false,
+        "has_rationale": false,
+        "rationale": "",
+        "primary_chunk_id": null,
+        "checkable": false,
+        "faithful": null,
+        "runner_up_chunk_id": null,
+        "score_gap": null,
+        "reason": "abstained/ungrounded -- no cited reference to explain"
+      },
+      "n_retrieve_steps": 4,
+      "k_sequence": [
+        10,
+        20,
+        30,
+        40
+      ],
+      "top_scores": [
+        0.474,
+        0.474,
+        0.474,
+        0.474
+      ],
+      "final_k": 40,
+      "re_searched": true,
+      "trace_abstained": true,
+      "n_trace_steps": 5,
+      "measured_needs_research": true,
+      "needs_research_label_ok": true,
+      "recall_at_k": null,
+      "recall_k": 40,
+      "elapsed_s": 42.33
+    },
+    {
+      "id": "te14",
+      "question": "What is the chemical structure of DNA's double helix?",
+      "split": "test",
+      "kind": "abstention",
+      "gold": "insufficient evidence",
+      "gold_pages": [],
+      "declared_needs_research": true,
+      "started_at": "2026-08-26T14:25:07+00:00",
+      "answer_text": "INSUFFICIENT EVIDENCE",
+      "grounded": false,
+      "confidence": 0.0,
+      "n_citations": 0,
+      "success": true,
+      "judge_score": null,
+      "groundedness": 0.0,
+      "citation_accuracy": 0.0,
+      "llm_calls": 0,
+      "llm_tokens": 0,
+      "raw_llm_outputs": [],
+      "interpret": {
+        "answered": false,
+        "has_rationale": false,
+        "rationale": "",
+        "primary_chunk_id": null,
+        "checkable": false,
+        "faithful": null,
+        "runner_up_chunk_id": null,
+        "score_gap": null,
+        "reason": "abstained/ungrounded -- no cited reference to explain"
+      },
+      "n_retrieve_steps": 4,
+      "k_sequence": [
+        10,
+        20,
+        30,
+        40
+      ],
+      "top_scores": [
+        0.0131,
+        0.0301,
+        0.0301,
+        0.0301
+      ],
+      "final_k": 40,
+      "re_searched": true,
+      "trace_abstained": true,
+      "n_trace_steps": 5,
+      "measured_needs_research": true,
+      "needs_research_label_ok": true,
+      "recall_at_k": null,
+      "recall_k": 40,
+      "elapsed_s": 42.09
+    },
+    {
+      "id": "te15",
+      "question": "What is Dijkstra's shortest path algorithm's time complexity with a priority queue?",
+      "split": "test",
+      "kind": "abstention",
+      "gold": "insufficient evidence",
+      "gold_pages": [],
+      "declared_needs_research": true,
+      "started_at": "2026-08-26T14:25:49+00:00",
+      "answer_text": "INSUFFICIENT EVIDENCE",
+      "grounded": false,
+      "confidence": 0.0,
+      "n_citations": 0,
+      "success": true,
+      "judge_score": null,
+      "groundedness": 0.0,
+      "citation_accuracy": 0.0,
+      "llm_calls": 0,
+      "llm_tokens": 0,
+      "raw_llm_outputs": [],
+      "interpret": {
+        "answered": false,
+        "has_rationale": false,
+        "rationale": "",
+        "primary_chunk_id": null,
+        "checkable": false,
+        "faithful": null,
+        "runner_up_chunk_id": null,
+        "score_gap": null,
+        "reason": "abstained/ungrounded -- no cited reference to explain"
+      },
+      "n_retrieve_steps": 4,
+      "k_sequence": [
+        10,
+        20,
+        30,
+        40
+      ],
+      "top_scores": [
+        0.0852,
+        0.0852,
+        0.0852,
+        0.0852
+      ],
+      "final_k": 40,
+      "re_searched": true,
+      "trace_abstained": true,
+      "n_trace_steps": 5,
+      "measured_needs_research": true,
+      "needs_research_label_ok": true,
+      "recall_at_k": null,
+      "recall_k": 40,
+      "elapsed_s": 52.18
+    },
+    {
+      "id": "te16",
+      "question": "What is the CAP theorem in distributed systems design?",
+      "split": "test",
+      "kind": "abstention",
+      "gold": "insufficient evidence",
+      "gold_pages": [],
+      "declared_needs_research": true,
+      "started_at": "2026-08-26T14:26:41+00:00",
+      "answer_text": "INSUFFICIENT EVIDENCE",
+      "grounded": false,
+      "confidence": 0.0,
+      "n_citations": 0,
+      "success": true,
+      "judge_score": null,
+      "groundedness": 0.0,
+      "citation_accuracy": 0.0,
+      "llm_calls": 0,
+      "llm_tokens": 0,
+      "raw_llm_outputs": [],
+      "interpret": {
+        "answered": false,
+        "has_rationale": false,
+        "rationale": "",
+        "primary_chunk_id": null,
+        "checkable": false,
+        "faithful": null,
+        "runner_up_chunk_id": null,
+        "score_gap": null,
+        "reason": "abstained/ungrounded -- no cited reference to explain"
+      },
+      "n_retrieve_steps": 4,
+      "k_sequence": [
+        10,
+        20,
+        30,
+        40
+      ],
+      "top_scores": [
+        0.005,
+        0.005,
+        0.005,
+        0.0054
+      ],
+      "final_k": 40,
+      "re_searched": true,
+      "trace_abstained": true,
+      "n_trace_steps": 5,
+      "measured_needs_research": true,
+      "needs_research_label_ok": true,
+      "recall_at_k": null,
+      "recall_k": 40,
+      "elapsed_s": 41.68
+    },
+    {
+      "id": "te17",
+      "question": "What is the status of the Navier-Stokes existence and smoothness problem, one of the Clay Millennium Prize problems?",
+      "split": "test",
+      "kind": "abstention",
+      "gold": "insufficient evidence",
+      "gold_pages": [],
+      "declared_needs_research": true,
+      "started_at": "2026-08-26T14:27:23+00:00",
+      "answer_text": "INSUFFICIENT EVIDENCE",
+      "grounded": false,
+      "confidence": 0.0,
+      "n_citations": 0,
+      "success": true,
+      "judge_score": null,
+      "groundedness": 0.0,
+      "citation_accuracy": 0.0,
+      "llm_calls": 0,
+      "llm_tokens": 0,
+      "raw_llm_outputs": [],
+      "interpret": {
+        "answered": false,
+        "has_rationale": false,
+        "rationale": "",
+        "primary_chunk_id": null,
+        "checkable": false,
+        "faithful": null,
+        "runner_up_chunk_id": null,
+        "score_gap": null,
+        "reason": "abstained/ungrounded -- no cited reference to explain"
+      },
+      "n_retrieve_steps": 4,
+      "k_sequence": [
+        10,
+        20,
+        30,
+        40
+      ],
+      "top_scores": [
+        0.0073,
+        0.0073,
+        0.0073,
+        0.0073
+      ],
+      "final_k": 40,
+      "re_searched": true,
+      "trace_abstained": true,
+      "n_trace_steps": 5,
+      "measured_needs_research": true,
+      "needs_research_label_ok": true,
+      "recall_at_k": null,
+      "recall_k": 40,
+      "elapsed_s": 47.37
+    }
+  ]
+}

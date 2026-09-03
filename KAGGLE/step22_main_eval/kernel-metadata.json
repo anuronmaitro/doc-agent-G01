@@ -1,0 +1,16 @@
+{
+ "id": "eliasmainur/mathscholar-step22-main-eval",
+ "title": "MathScholar Step22 Main Eval",
+ "code_file": "kaggle_step22_main_eval.ipynb",
+ "language": "python",
+ "kernel_type": "notebook",
+ "is_private": false,
+ "enable_gpu": true,
+ "machine_shape": "NvidiaTeslaT4",
+ "enable_internet": true,
+ "dataset_sources": [
+  "himadribiswas0904/mathscholar-index-mirror"
+ ],
+ "competition_sources": [],
+ "kernel_sources": []
+}
