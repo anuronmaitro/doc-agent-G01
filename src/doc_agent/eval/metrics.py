@@ -417,25 +417,45 @@ def groundedness(answer: Answer) -> float:
 
     Per citation: resolve the real excerpt via `_cited_excerpt` (0.0 if the chunk doesn't
     exist or the span is out of bounds -- a fabricated citation cannot ground anything).
-    Then LaTeX-normalise both the excerpt and the full answer text (`normalize_latex`, above
-    -- so `\\tfrac12` in the source page and `\\frac{1}{2}` in the answer still count as the
-    same claim, not a mismatch) and score how much of the *excerpt* reappears, in order,
-    inside the answer: `LCS(excerpt, answer) / len(excerpt)`.
+    LaTeX-normalise both sides (`normalize_latex`, above -- so `\\tfrac12` on the source page
+    and `\\frac{1}{2}` in the answer still count as the same claim, not a mismatch), then
+    score the citation in **both directions** and take the max -- see below for why one
+    direction alone is not enough.
 
-    Recall of the excerpt in the answer, **not** `ocr_f1`'s symmetric F1: the answer is
-    expected to be much shorter than its combined cited evidence, so penalising it for not
-    *consisting only of* the excerpt (F1's precision term) would punish good, concise answers
-    rather than catching unsupported ones. A real quote embedded in a short sentence scores
-    close to 1.0 here; a citation attached to an unrelated claim scores close to 0.0.
+    **Direction 1 -- recall of the excerpt in the answer:** `LCS(excerpt, answer) / len(excerpt)`.
+    Built for a prose answer that embeds or paraphrases a short cited passage: the excerpt is
+    expected to be much shorter than the answer, so penalising the answer for not *consisting
+    only of* the excerpt (an F1 precision term) would punish good, concise prose rather than
+    catch unsupported claims. A real quote embedded in a short sentence scores close to 1.0
+    here; a citation attached to an unrelated claim scores close to 0.0.
 
-    **Word-level LCS, not `ocr_f1`'s character-level one.** Tried character-level first and
-    it does not survive the obvious attack: two short, generic strings sharing only common
-    symbols (parentheses, digits, `=`) can rack up a deceptively high *character* LCS purely
-    by chance, even with no real semantic overlap at all -- caught by a test built exactly
-    for this ("The gamma function is always exactly equal to 42." against a real
-    `\\Gamma(z+1)=z\\Gamma(z)` excerpt scored 0.27, not the near-zero a genuinely unsupported
-    claim should get). Matching whole, normalised *words* in order is a much sharper test of
-    real textual overlap.
+    **Direction 2 -- precision of the answer's claim in the excerpt:** `LCS(claim, excerpt) /
+    len(claim)`, where `claim` is `answer.text` with any `format_answer`-appended
+    `"\\n\\nRationale: ..."` suffix stripped first (that suffix is the model's own commentary
+    *about* the citation, not a quote *from* it, so it must not count toward or against
+    grounding either way). Needed for the opposite answer shape direction 1 cannot handle: a
+    short, exact, fully-correct value cited against a long excerpt -- a whole retrieved table
+    chunk with many unrelated entries, not just the one cell the answer needed. Recall of a
+    200-word chunk inside a 2-word answer ("2.997925") is near-zero no matter how right the
+    answer is; precision asks the question that shape of answer can actually pass: is what
+    the answer says truly *in* the excerpt. Confirmed against a real Kaggle run (2026-08-23,
+    `reports/a3_eval_smoke.md`) that recall alone silently downgraded a correct, correctly-
+    cited numeric answer to "insufficient evidence" for exactly this reason.
+
+    Direction 2 does not reopen the attack direction 1 exists to close: a fabricated claim's
+    distinctive content (specific numbers, specific terms) still will not appear, in order,
+    inside an unrelated real excerpt, so a hallucination scores low under precision too --
+    `test_cites_real_chunk_but_states_something_it_does_not_say` covers this for both
+    directions at once, not just the one that was already covered.
+
+    **Word-level LCS in both directions, not `ocr_f1`'s character-level one.** Tried
+    character-level first and it does not survive the obvious attack: two short, generic
+    strings sharing only common symbols (parentheses, digits, `=`) can rack up a deceptively
+    high *character* LCS purely by chance, even with no real semantic overlap at all -- caught
+    by a test built exactly for this ("The gamma function is always exactly equal to 42."
+    against a real `\\Gamma(z+1)=z\\Gamma(z)` excerpt scored 0.27, not the near-zero a
+    genuinely unsupported claim should get). Matching whole, normalised *words* in order is a
+    much sharper test of real textual overlap.
 
     `groundedness(answer) = mean(per-citation score)`. 0.0 for an answer with no citations --
     there is nothing to ground a claim in.
@@ -454,13 +474,29 @@ def groundedness(answer: Answer) -> float:
         if not excerpt_words or not answer_words:
             per_citation.append(0.0)
             continue
-        overlap = _lcs_length(excerpt_words, answer_words)
-        per_citation.append(overlap / len(excerpt_words))
+        recall_score = _lcs_length(excerpt_words, answer_words) / len(excerpt_words)
+
+        claim_text = answer.text.split("\n\nRationale:", 1)[0]
+        claim_words = _content_words(normalize_latex(claim_text))
+        precision_score = (
+            _lcs_length(claim_words, excerpt_words) / len(claim_words) if claim_words else 0.0
+        )
+        per_citation.append(max(recall_score, precision_score))
     return sum(per_citation) / len(per_citation)
 
 
 def ece(confidences: Any, correct: Any) -> float:
-    raise NotImplementedError  # calibration -- Step 21
+    """Delegates to `eval/calibration.py::ece` -- the real implementation, and the ONLY one
+    (Step 21's own instruction: two independently-maintained `ece` definitions would drift
+    apart the moment one got a bugfix the other didn't). This copy exists because the
+    structure gate's `REQUIRED` manifest names `doc_agent.eval.metrics.recall_at_k`/
+    `groundedness` alongside this file's other headline metrics, and `eval/calibration.py`'s
+    own `REQUIRED_V2` entry is the one actually enforced for `ece` specifically -- kept here
+    too anyway, consistent rather than surprising for a caller who reaches for calibration
+    metrics from this module the same way they reach for `groundedness`/`recall_at_k`."""
+    from .calibration import ece as _ece
+
+    return _ece(confidences, correct)
 
 
 def subgroup_gap(scores_by_group: dict) -> float:

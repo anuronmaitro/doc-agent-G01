@@ -8,10 +8,11 @@ from typing import Any
 
 from .. import hooks
 from ..contracts import *  # noqa
+from ..eval import calibration
 from ..llm import client, postprocess, prompts
 from ..retrieval import rerank
 from ..retrieval import retriever as retriever_mod
-from . import hitl, tools
+from . import guardrails, hitl, tools
 from .memory import Memory
 
 
@@ -126,18 +127,51 @@ class Agent:
         self-reporting no evidence, or zero citations surviving resolution) skips the retry
         entirely -- there is nothing to correct in an already-correct "I don't know".
 
-        A1's HITL trigger (guardrails.ESCALATION_CONFIDENCE_THRESHOLD, τ=0.50): fires exactly
-        here, on decide()'s own k_max abstention -- confidence is always 0.0 in this branch,
-        always under τ, and `state["abstain"]` being set is precisely "we've re-searched to
-        k_max". The OTHER abstain path below (a retry that's still ungrounded) is a different
-        failure mode -- the evidence was strong enough for decide(), the LLM's answer just
-        wasn't grounded in it -- and isn't what A1's own trigger names, so it isn't escalated
-        here."""
+        A1's HITL trigger (guardrails.ESCALATION_CONFIDENCE_THRESHOLD, τ=0.50): "calibrated
+        confidence below τ after re-search to k_max" (plan_a3.md Sec.5/Step 13) -- fires
+        exactly here, on decide()'s own k_max abstention. The OTHER abstain path below (a
+        retry that's still ungrounded) is a different failure mode -- the evidence was strong
+        enough for decide(), the LLM's answer just wasn't grounded in it -- and isn't what
+        A1's own trigger names, so it isn't escalated here.
+
+        2026-08-26 (Step 21): before this, the comparison against τ was never actually
+        computed -- this branch escalated unconditionally on `state["abstain"]` alone, on the
+        (accurate but unverified in code) assumption that confidence "would be" 0.0 here. Now
+        a real confidence is computed from the last (still-weak) retrieval's own top_score/
+        score_gap -- the exact same `postprocess._confidence()` formula grounded answers use,
+        so "confidence" means one consistent thing everywhere in this codebase -- then passed
+        through `calibration.apply_temperature()` (identity, T=1.0, until a real T is fit and
+        set in `configs/config.yaml`'s `calibration.temperature` -- see that module's own
+        docstring) before the actual `< τ` check. In a genuine `decide()`-produced abstain
+        state this is essentially always true anyway (state["chunks"] is weak BY
+        `is_weak()`'s own definition, i.e. `top_score < weak_threshold`), so this does not
+        change behaviour on a real run -- it changes what the threshold actually MEANS: a
+        live, calibrated-scale comparison, not an assumption asserted only in this docstring.
+        """
         if state.get("abstain"):
-            hitl.escalate(
-                "confidence below A1's tau=0.50 threshold after re-search to k_max",
-                {"query": state.get("query"), "abstain_reason": state.get("abstain_reason")},
+            weak_chunks = state.get("chunks") or []
+            top_score = retriever_mod.top_score(weak_chunks)
+            score_gap = (
+                weak_chunks[0].score - weak_chunks[1].score if len(weak_chunks) >= 2 else 0.0
             )
+            raw_confidence = postprocess._confidence(
+                top_score, score_gap, calculator_verified=False, retried=False
+            )
+            temperature = self._full_cfg.get("calibration", {}).get(
+                "temperature", calibration.IDENTITY_TEMPERATURE
+            )
+            calibrated_confidence = calibration.apply_temperature(raw_confidence, temperature)
+            if calibrated_confidence < guardrails.ESCALATION_CONFIDENCE_THRESHOLD:
+                hitl.escalate(
+                    "confidence below A1's tau=0.50 threshold (calibrated scale) after "
+                    "re-search to k_max",
+                    {
+                        "query": state.get("query"),
+                        "abstain_reason": state.get("abstain_reason"),
+                        "raw_confidence": round(raw_confidence, 4),
+                        "calibrated_confidence": round(calibrated_confidence, 4),
+                    },
+                )
             return Answer(
                 text=postprocess.INSUFFICIENT_EVIDENCE, citations=[], grounded=False, confidence=0.0
             )
