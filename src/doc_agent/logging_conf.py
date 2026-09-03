@@ -51,7 +51,14 @@ def register(hooks: Any) -> None:
         `decide()`'s own internal evidence-gated re-search (Step 10) has fully populated
         `state["obs"]` with one `{"top_score", "k"}` entry per retrieval attempt -- flushed
         here as one `retrieve` TraceStep each (ON_STEP fired too early to see any of this),
-        followed by one final `answer` TraceStep.
+        followed by one final `answer` TraceStep. That final step's `obs` also carries the
+        primary/runner-up score breakdown (`primary_chunk_id`/`primary_score`/
+        `runner_up_chunk_id`/`runner_up_score`/`score_gap`, read from `state["chunks"]`,
+        decide()'s own final ranked list) whenever at least one chunk was retrieved -- added
+        2026-08-26 (Step 20) so `eval/interpret.py`'s rationale-faithfulness check has a real
+        recorded number to verify synthesize()'s "why this reference over the runner-up"
+        rationale against, not just the aggregate `top_score` the retrieve steps already
+        carry.
 
     **Truncate-then-append, per run, not per process:** the file is truncated the moment a
     NEW `state` object is seen at ON_STEP, then appended to for the rest of that same run.
@@ -91,7 +98,26 @@ def register(hooks: Any) -> None:
                     if isinstance(obs, dict) and "top_score" in obs and "k" in obs:
                         _append("retrieve", {"query": query, "k": obs["k"]}, obs)
                 answer = ctx["answer"]
-                _append("answer", {}, {"abstained": not answer.grounded})
+                answer_obs: dict[str, Any] = {"abstained": not answer.grounded}
+                # 2026-08-26 (Step 20): the primary/runner-up score breakdown behind
+                # synthesize()'s own "why this reference over the runner-up" rationale
+                # (agent.py's `score_gap = chunks[0].score - chunks[1].score`) was computed
+                # but never written anywhere -- eval/interpret.py's rationale-faithfulness
+                # check needs a real, recorded number to verify the rationale's claim
+                # against, not just the aggregate top_score already captured above. Read
+                # from state["chunks"] (decide()'s own final, already-reranked/sorted list)
+                # -- absent in state dicts a caller builds without ever calling decide()
+                # (e.g. this module's own unit tests), so this degrades to no extra keys
+                # rather than raising, same as every other lookup in this handler.
+                chunks = state.get("chunks") or []
+                if chunks:
+                    answer_obs["primary_chunk_id"] = chunks[0].id
+                    answer_obs["primary_score"] = chunks[0].score
+                    if len(chunks) >= 2:
+                        answer_obs["runner_up_chunk_id"] = chunks[1].id
+                        answer_obs["runner_up_score"] = chunks[1].score
+                        answer_obs["score_gap"] = chunks[0].score - chunks[1].score
+                _append("answer", {}, answer_obs)
         except Exception:
             logger.warning("logging_conf._trace: failed to append a trace step; skipping it")
         return ctx

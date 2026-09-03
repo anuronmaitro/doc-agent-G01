@@ -5,7 +5,7 @@ import json
 import pytest
 
 from doc_agent import hooks, logging_conf
-from doc_agent.contracts import Answer
+from doc_agent.contracts import Answer, Chunk
 
 
 @pytest.fixture(autouse=True)
@@ -104,6 +104,65 @@ class TestTraceContent:
         hooks.run(hooks.AFTER_ANSWER, {"answer": ans})
         answer_line = _lines()[-1]
         assert answer_line["obs"] == {"abstained": True}
+
+
+class TestAnswerStepScoreBreakdown:
+    """Step 20: the primary/runner-up score breakdown eval/interpret.py's
+    rationale-faithfulness check reads -- read from state["chunks"], decide()'s own final
+    ranked list, never from state["obs"] (that only ever carries the aggregate top_score)."""
+
+    def test_two_or_more_chunks_records_the_full_breakdown(self):
+        chunk1 = Chunk(id="c1", doc_id="d0", text="best", page_ids=["p0"], score=0.91)
+        chunk2 = Chunk(id="c2", doc_id="d0", text="runner up", page_ids=["p0"], score=0.34)
+        chunk3 = Chunk(id="c3", doc_id="d0", text="third", page_ids=["p0"], score=0.10)
+        state = {
+            "query": "q",
+            "obs": [{"top_score": 0.91, "k": 10}],
+            "chunks": [chunk1, chunk2, chunk3],
+        }
+        hooks.run(hooks.ON_STEP, {"state": state})
+        ans = Answer(text="a", citations=[], grounded=True, confidence=0.8)
+        hooks.run(hooks.AFTER_ANSWER, {"answer": ans})
+
+        obs = _lines()[-1]["obs"]
+        assert obs["abstained"] is False
+        assert obs["primary_chunk_id"] == "c1"
+        assert obs["primary_score"] == pytest.approx(0.91)
+        assert obs["runner_up_chunk_id"] == "c2"
+        assert obs["runner_up_score"] == pytest.approx(0.34)
+        assert obs["score_gap"] == pytest.approx(0.91 - 0.34)
+        # the third-ranked chunk plays no part in the breakdown -- only top-2 matter.
+        assert "c3" not in json.dumps(obs)
+
+    def test_single_chunk_records_primary_only_no_runner_up_or_gap(self):
+        chunk1 = Chunk(id="c1", doc_id="d0", text="only one", page_ids=["p0"], score=0.7)
+        state = {"query": "q", "obs": [{"top_score": 0.7, "k": 10}], "chunks": [chunk1]}
+        hooks.run(hooks.ON_STEP, {"state": state})
+        ans = Answer(text="a", citations=[], grounded=True, confidence=0.6)
+        hooks.run(hooks.AFTER_ANSWER, {"answer": ans})
+
+        obs = _lines()[-1]["obs"]
+        assert obs["primary_chunk_id"] == "c1"
+        assert "runner_up_chunk_id" not in obs
+        assert "runner_up_score" not in obs
+        assert "score_gap" not in obs
+
+    def test_no_chunks_key_at_all_records_only_abstained_unchanged(self):
+        """The k_max-abstain short-circuit in synthesize() never sets state["chunks"] to a
+        real ranked list before the LLM would have run -- must degrade to exactly the old
+        two-field shape, not crash or invent chunk ids from nothing."""
+        state = {"query": "q", "obs": [{"top_score": 0.1, "k": 40}]}
+        hooks.run(hooks.ON_STEP, {"state": state})
+        ans = Answer(text="INSUFFICIENT EVIDENCE", citations=[], grounded=False, confidence=0.0)
+        hooks.run(hooks.AFTER_ANSWER, {"answer": ans})
+        assert _lines()[-1]["obs"] == {"abstained": True}
+
+    def test_empty_chunks_list_records_only_abstained_unchanged(self):
+        state = {"query": "q", "obs": [], "chunks": []}
+        hooks.run(hooks.ON_STEP, {"state": state})
+        ans = Answer(text="INSUFFICIENT EVIDENCE", citations=[], grounded=False, confidence=0.0)
+        hooks.run(hooks.AFTER_ANSWER, {"answer": ans})
+        assert _lines()[-1]["obs"] == {"abstained": True}
 
 
 class TestTruncateThenAppendPerRun:
